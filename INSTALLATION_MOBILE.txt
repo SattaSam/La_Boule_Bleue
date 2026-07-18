@@ -1,0 +1,22 @@
+LA BOULE BLEUE — INSTALLATION MOBILE
+
+Cette version est une application web installable (PWA).
+
+IMPORTANT
+Une PWA doit être ouverte depuis une adresse HTTPS ou depuis localhost.
+Elle ne peut pas être installée directement en ouvrant index.html depuis le ZIP.
+
+ANDROID / CHROME
+1. Décompressez le dossier sur un hébergement HTTPS.
+2. Ouvrez index.html dans Chrome.
+3. Touchez le menu ⋮ puis « Installer l'application » ou « Ajouter à l'écran d'accueil ».
+
+IPHONE / IPAD / SAFARI
+1. Ouvrez l'adresse HTTPS du jeu dans Safari.
+2. Touchez Partager.
+3. Choisissez « Sur l'écran d'accueil ».
+
+ORDINATEUR
+Le fichier index.html reste jouable directement. L'installation PWA complète nécessite également HTTPS ou localhost.
+
+Conception : Yllias et Sam LEULEU
