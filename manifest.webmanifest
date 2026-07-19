@@ -1,8 +1,9 @@
 {
   "name": "La Boule Bleue",
   "short_name": "Boule Bleue",
+  "id": "./",
   "description": "Traversez des labyrinthes évolutifs et échappez aux gardiens.",
-  "start_url": "./index.html",
+  "start_url": "./",
   "scope": "./",
   "display": "standalone",
   "orientation": "any",

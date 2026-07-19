@@ -1,4 +1,4 @@
-LA BOULE BLEUE — INSTALLATION MOBILE
+LA BOULE BLEUE — INSTALLATION MOBILE — VERSION 13 FINALE
 
 Cette version est une application web installable (PWA).
 Cette édition réinitialise une fois les anciens profils, inventaires et scores afin de repartir de zéro.
@@ -16,6 +16,7 @@ Utilisez le fichier La_Boule_Bleue_GitHub.zip : ses fichiers sont déjà placés
 4. Attendez une à deux minutes, puis ouvrez :
    https://sattasam.github.io/La_Boule_Bleue/
 5. Sur le téléphone, supprimez l’ancienne application installée si elle existe, puis rechargez cette adresse dans le navigateur avant de réinstaller.
+6. Le menu d'accueil affiche le bouton « Installer sur ce téléphone ». Le jeu accepte le portrait et le paysage sans verrouillage.
 
 ANDROID / CHROME
 1. Décompressez le dossier sur un hébergement HTTPS.
