@@ -1,10 +1,21 @@
 LA BOULE BLEUE — INSTALLATION MOBILE
 
 Cette version est une application web installable (PWA).
+Cette édition réinitialise une fois les anciens profils, inventaires et scores afin de repartir de zéro.
+Le mode entraînement permet ensuite de choisir librement un niveau, sans modifier l’aventure principale.
 
 IMPORTANT
 Une PWA doit être ouverte depuis une adresse HTTPS ou depuis localhost.
 Elle ne peut pas être installée directement en ouvrant index.html depuis le ZIP.
+
+MISE À JOUR DU SITE GITHUB
+Utilisez le fichier La_Boule_Bleue_GitHub.zip : ses fichiers sont déjà placés à la racine.
+1. Décompressez La_Boule_Bleue_GitHub.zip.
+2. Dans le dépôt SattaSam/La_Boule_Bleue, remplacez les fichiers situés à la racine par le contenu extrait : index.html, manifest.webmanifest et service-worker.js.
+3. Remplacez également le dossier icons. Ne déposez pas un dossier parent La_Boule_Bleue_Mobile dans le dépôt.
+4. Attendez une à deux minutes, puis ouvrez :
+   https://sattasam.github.io/La_Boule_Bleue/
+5. Sur le téléphone, supprimez l’ancienne application installée si elle existe, puis rechargez cette adresse dans le navigateur avant de réinstaller.
 
 ANDROID / CHROME
 1. Décompressez le dossier sur un hébergement HTTPS.

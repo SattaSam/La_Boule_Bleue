@@ -16,9 +16,9 @@
     body { margin:0; min-height:100vh; min-height:100dvh; display:grid; place-items:center; padding:20px; background-color:#06152f; background-image:radial-gradient(#ffd94a 1.5px,transparent 1.5px),radial-gradient(#ffe989 1px,transparent 1px),radial-gradient(circle at top,#17396b99,#06152f 70%); background-size:73px 73px,47px 47px,100% 100%; background-position:0 0,21px 14px,0 0; font-family:system-ui,sans-serif; color:#eef6ff; overscroll-behavior:none; }
     main { width:min(94vw,760px); text-align:center; }
     h1 { margin:0 0 6px; font-size:clamp(1.7rem,5vw,2.8rem); }
-    .subtitle { margin:0 0 14px; color:#a9bdd8; }
-    .bar { display:flex; flex-wrap:wrap; justify-content:space-between; gap:8px 12px; align-items:center; margin:0 auto 10px; max-width:672px; font-weight:700; }
-    #status { color:#9ed5ff; }
+    .subtitle { height:4.2em; overflow:auto; margin:0 0 8px; padding:2px 5px; color:#a9bdd8; }
+    .bar { display:flex; flex-wrap:wrap; justify-content:space-between; gap:6px 12px; align-content:flex-start; align-items:flex-start; height:5.2em; overflow:auto; margin:0 auto 8px; max-width:672px; font-weight:700; }
+    #status { flex:1 1 360px; min-width:0; color:#9ed5ff; }
     button { border:1px solid #4f79a6; border-radius:10px; padding:8px 14px; color:white; background:#17375c; cursor:pointer; font-weight:700; }
     button:hover { background:#245184; }
     .hidden { display:none !important; }
@@ -26,7 +26,8 @@
     .menu-card { width:min(92vw,570px); max-height:92dvh; overflow:auto; padding:38px 28px; text-align:center; border:2px solid #d6b63c; border-radius:22px; background:#091d42ed; box-shadow:0 20px 70px #000b,0 0 35px #315d9b88; }
     .menu-card h1 { color:#fff3a0; text-shadow:0 0 18px #ffd94a88; }
     .menu-actions { display:flex; flex-wrap:wrap; justify-content:center; gap:12px; margin-top:24px; }
-    .menu-actions.ordered { display:grid; grid-template-columns:1fr; max-width:330px; margin:22px auto 0; }
+    .menu-actions.ordered { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); max-width:520px; margin:22px auto 0; }
+    .menu-actions.ordered button { min-width:0; width:100%; }
     .menu-actions button { min-width:150px; padding:12px 20px; font-size:1.05rem; }
     .menu-actions .mini-button { min-width:auto; padding:7px 12px; font-size:.78rem; }
     .skin-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(92px,1fr)); gap:9px; max-height:29vh; overflow:auto; margin:12px 0 20px; }
@@ -57,14 +58,13 @@
     .touch { display:grid; grid-template-columns:repeat(3,52px); justify-content:center; gap:6px; margin-top:14px; }
     .touch button { padding:0; height:48px; font-size:1.3rem; touch-action:manipulation; }
     .touch .up { grid-column:2; } .touch .left { grid-column:1; grid-row:2; } .touch .down { grid-column:2; grid-row:2; } .touch .right { grid-column:3; grid-row:2; }
-    #orientationHint { display:none; position:fixed; inset:0; z-index:99; place-items:center; padding:30px; background:#06152f; font-size:1.2rem; text-align:center; }
     @media (min-width:700px) and (pointer:fine) { .touch { display:none; } }
     @media (max-width:699px), (pointer:coarse) {
       body { padding:8px; align-items:start; }
       main { width:100%; }
       h1 { font-size:1.55rem; margin-top:2px; }
-      .subtitle { margin-bottom:7px; font-size:.83rem; }
-      .bar { margin-bottom:6px; font-size:.78rem; align-items:flex-start; }
+      .subtitle { height:4.7em; margin-bottom:5px; font-size:.83rem; }
+      .bar { height:6.2em; margin-bottom:4px; font-size:.78rem; }
       .button-row { gap:4px; }
       .button-row button { padding:7px 8px; font-size:.76rem; }
       .boost-slots { grid-template-columns:repeat(5,1fr); gap:3px; }
@@ -77,7 +77,11 @@
       .help { margin-top:6px; font-size:.76rem; }
       .menu-card { padding:28px 16px; }
     }
-    @media (orientation:portrait) and (pointer:coarse) and (max-width:900px) { #gameUI:not(.hidden)~#orientationHint { display:grid; } }
+    @media (orientation:portrait) and (pointer:coarse) and (max-width:900px) {
+      canvas { width:100%; max-height:calc(100dvh - 300px); }
+      .touch { margin-top:6px; grid-template-columns:repeat(3,52px); }
+      .touch button { height:42px; }
+    }
     @media (orientation:landscape) and (pointer:coarse) {
       body{padding:4px;align-items:start} main{width:100%} main>h1{display:none}.subtitle{font-size:.72rem;margin:1px 0 3px}.bar{margin-bottom:3px;font-size:.7rem}.boost-slots{margin-bottom:2px}.game-shell{padding:7px}.touch{position:fixed;right:8px;bottom:8px;opacity:.82;z-index:8}.help{display:none}canvas{max-height:calc(100dvh - 112px);max-width:calc(100vw - 205px)}
     }
@@ -89,11 +93,12 @@
     <h1>La Boule Bleue</h1>
     <p>Échappe aux gardiens, traverse les biomes et collectionne les skins !</p>
     <p id="testNotice">Aventure complète : 100 niveaux et niveaux bonus 10 bis, 20 bis…</p>
-    <div class="menu-actions ordered"><button id="playBtn">Reprendre</button><button id="skinBtn">Boutique</button><button id="newGameBtn">Nouvelle partie</button><button id="saveBtn">Sauvegarder</button><button id="loadBtn">Charger une partie</button><button id="scoreBtn">Score</button><button id="soundBtn">🔊 Bruitages : activés</button><button id="musicBtn">🎵 Musique : activée</button><button id="installBtn" class="hidden">Installer l’application</button></div>
+    <div class="menu-actions ordered"><button id="playBtn">Reprendre</button><button id="skinBtn">Boutique</button><button id="newGameBtn">Nouvelle partie</button><button id="trainingBtn">Mode entraînement</button><button id="saveBtn">Sauvegarder</button><button id="loadBtn">Charger une partie</button><button id="scoreBtn">Score</button><button id="installBtn">📲 Installer</button><button id="soundBtn">🔊 Bruitages : activés</button><button id="musicBtn">🎵 Musique : activée</button></div>
     <p class="credits">Concepteurs du jeu : Yllias et Sam LEULEU</p>
   </div>
 </section>
 <section id="loadScreen" class="menu-screen hidden"><div class="menu-card"><h1>Charger une partie</h1><p>Jusqu’à cinq profils peuvent être conservés.</p><select id="profileSelect" style="width:100%;padding:12px;border-radius:9px;background:#102b4d;color:white"></select><div class="menu-actions"><button id="loadProfileBtn">Charger</button><button id="loadBackBtn">Retour</button></div></div></section>
+<section id="trainingScreen" class="menu-screen hidden"><div class="menu-card"><h1>Mode entraînement</h1><p>Choisis un niveau. Les vies, étoiles et objets utilisés ici n’affectent pas ton aventure. Toutes les 10 victoires, un niveau bonus récompensé est débloqué.</p><label for="trainingLevel">Niveau d’entraînement</label><select id="trainingLevel" style="width:100%;margin-top:10px;padding:12px;border-radius:9px;background:#102b4d;color:white"></select><p id="trainingProgress"></p><div class="menu-actions"><button id="startTrainingBtn">Commencer</button><button id="trainingBackBtn">Retour</button></div></div></section>
 <section id="scoreScreen" class="menu-screen hidden">
   <div class="menu-card"><h1>Meilleurs records</h1><div id="scoreList"></div><div class="menu-actions"><button id="scoreBackBtn">Retour</button></div></div>
 </section>
@@ -130,7 +135,6 @@
   </div>
   <p class="help">Ordinateur : flèches du clavier · Mobile : boutons tactiles ou glissement du doigt</p>
 </main>
-<div id="orientationHint">📱 Tournez votre appareil en mode paysage pour jouer.</div>
 <script>
 (() => {
   const TILE=24;
@@ -138,8 +142,8 @@
   let rows=15,cols=19,level=1,lastWin=false,lives=0,stars=0,paused=true,bonusMode=false,bonusForLevel=0,bonusStarsStart=0,bonusStarsCollected=0,bonusRemaining=30,bonusTimer=null,bonusGuardiansReleased=false;
   const canvas=document.querySelector('#canvas'), ctx=canvas.getContext('2d');
   const overlay=document.querySelector('#overlay'), status=document.querySelector('#status'), subtitle=document.querySelector('#subtitle');
-  const startScreen=document.querySelector('#startScreen'),skinScreen=document.querySelector('#skinScreen'),scoreScreen=document.querySelector('#scoreScreen'),loadScreen=document.querySelector('#loadScreen'),gameUI=document.querySelector('#gameUI');
-  let map, player, exit, enemies, running, enemyTimer, startTime, moves, theme, ballsNeeded, ballsExited, deathReason,lastEnemySave=0;
+  const startScreen=document.querySelector('#startScreen'),skinScreen=document.querySelector('#skinScreen'),scoreScreen=document.querySelector('#scoreScreen'),loadScreen=document.querySelector('#loadScreen'),trainingScreen=document.querySelector('#trainingScreen'),gameUI=document.querySelector('#gameUI');
+  let map, player, exit, enemies, running, enemyTimer, startTime, moves, theme, ballsNeeded, ballsExited, deathReason,lastEnemySave=0,trainingMode=false,trainingRewardBonus=false,trainingBonusPending=false,trainingSessionFinished=false,trainingBaseSnapshot=null;
   let keyRequired=false,hasKey=false,starAvailable=false,starsRemaining=0,levelStarsTotal=0,portalA=null,portalB=null,invulnerableZones=[],deadEndCells=new Set(),generationCount=0,generationsSincePortal=0,nextPortalGap=3+Math.floor(Math.random()*2),targetMovesLow=0,targetMovesHigh=0,targetTimeLow=0,targetTimeHigh=0,currentPlayer='Joueur',hudNote='';
 
   const skins=[
@@ -163,6 +167,13 @@
   ];
   let unlocked=['blue'],guardianUnlocked=['redOrb'],selectedSkin='blue',selectedGuardianSkin='redOrb',level5RewardGiven=false,totalWins=0,boostInventory={},activeEffects={};
   try{
+    const freshVersion='fresh-install-2026-07-19-v1';
+    if(localStorage.getItem('bouleBleueFreshVersion')!==freshVersion){
+      ['bouleBleueSkins','bouleBleueSelected','bouleBleueGuardianSkins','bouleBleueGuardianSkin','bouleBleueLevel5Reward','bouleBleueTotalWins','bouleBleueStars','bouleBleueBoosts','bouleBleueCurrentPlayer','bouleBleueSave','bouleBleueAutoSaves','bouleBleueManualSaves','bouleBleueRecords','bouleBleuePendingLevel','bouleBleuePendingBonus','bouleBleueTrainingWins','bouleBleuePlayerReset'].forEach(k=>localStorage.removeItem(k));
+      localStorage.setItem('bouleBleueFreshVersion',freshVersion);
+    }
+  }catch(_){}
+  try{
     unlocked=JSON.parse(localStorage.getItem('bouleBleueSkins'))||['blue'];
     selectedSkin=localStorage.getItem('bouleBleueSelected')||'blue';
     guardianUnlocked=JSON.parse(localStorage.getItem('bouleBleueGuardianSkins'))||['redOrb'];
@@ -175,7 +186,7 @@
     if(localStorage.getItem('bouleBleuePlayerReset')!=='reset-2026-07-18'){unlocked=['blue'];selectedSkin='blue';level5RewardGiven=false;localStorage.setItem('bouleBleuePlayerReset','reset-2026-07-18');}
     if(!guardianUnlocked.includes(selectedGuardianSkin))selectedGuardianSkin='redOrb';
   }catch(_){ }
-  function saveSkins(){try{localStorage.setItem('bouleBleueSkins',JSON.stringify(unlocked));localStorage.setItem('bouleBleueSelected',selectedSkin);localStorage.setItem('bouleBleueGuardianSkins',JSON.stringify(guardianUnlocked));localStorage.setItem('bouleBleueGuardianSkin',selectedGuardianSkin);localStorage.setItem('bouleBleueLevel5Reward',level5RewardGiven?'yes':'no');localStorage.setItem('bouleBleueTotalWins',String(totalWins));localStorage.setItem('bouleBleueStars',String(stars));localStorage.setItem('bouleBleueBoosts',JSON.stringify(boostInventory));localStorage.setItem('bouleBleueCurrentPlayer',currentPlayer);}catch(_){}}
+  function saveSkins(){if(trainingMode)return;try{localStorage.setItem('bouleBleueSkins',JSON.stringify(unlocked));localStorage.setItem('bouleBleueSelected',selectedSkin);localStorage.setItem('bouleBleueGuardianSkins',JSON.stringify(guardianUnlocked));localStorage.setItem('bouleBleueGuardianSkin',selectedGuardianSkin);localStorage.setItem('bouleBleueLevel5Reward',level5RewardGiven?'yes':'no');localStorage.setItem('bouleBleueTotalWins',String(totalWins));localStorage.setItem('bouleBleueStars',String(stars));localStorage.setItem('bouleBleueBoosts',JSON.stringify(boostInventory));localStorage.setItem('bouleBleueCurrentPlayer',currentPlayer);}catch(_){}}
   function renderSkins(){
     const grid=document.querySelector('#skinGrid'); grid.innerHTML='';
     skins.forEach(s=>{
@@ -200,7 +211,7 @@
   function effectActive(id){return (activeEffects[id]||0)>Date.now();}
   function renderBoostSlots(){
     const box=document.querySelector('#boostSlots');box.innerHTML='';
-    const ids=[...new Set([...Object.keys(activeEffects).filter(effectActive),...Object.keys(boostInventory).filter(id=>boostInventory[id]>0)])].slice(0,5);for(let i=0;i<5;i++){const id=ids[i],item=boostCatalog.find(x=>x.id===id),active=effectActive(id),remaining=active?Math.max(0,Math.ceil((activeEffects[id]-Date.now())/1000)):0,b=document.createElement('button');b.className=`boost-slot${item?'':' empty'}${active?' active':''}`;b.innerHTML=item?`${item.icon} <b>${boostInventory[id]||0}</b><br>${active?`⏱ ${remaining} s`:item.name.split(' ')[0]}`:'Emplacement vide';b.title=active?`${item.name} actif : ${remaining} secondes restantes`:`Utiliser ${item.name}`;if(item&&!active&&boostInventory[id]>0)b.onclick=()=>activateBoost(id);box.appendChild(b);}
+    const ids=[...new Set([...Object.keys(activeEffects).filter(effectActive),...Object.keys(boostInventory).filter(id=>boostInventory[id]>0)])].slice(0,5);for(let i=0;i<5;i++){const id=ids[i],item=boostCatalog.find(x=>x.id===id),active=effectActive(id),remaining=active?Math.max(0,Math.ceil((activeEffects[id]-Date.now())/1000)):0,b=document.createElement('button');b.className=`boost-slot${item?'':' empty'}${active?' active':''}`;b.innerHTML=item?`${item.icon} <b>${boostInventory[id]||0}</b><br>${active?`⏱ ${remaining} s`:item.name.split(' ')[0]}`:'Emplacement vide';b.title=item?(active?`${item.name} actif : ${remaining} secondes restantes`:`Utiliser ${item.name}`):'Emplacement vide';if(item&&!active&&boostInventory[id]>0)b.onclick=()=>activateBoost(id);box.appendChild(b);}
   }
   function activateBoost(id){
     const item=boostCatalog.find(x=>x.id===id);if(!item||!boostInventory[id])return;
@@ -388,7 +399,7 @@
     bonusTimer=setInterval(()=>{if(!running||paused)return;bonusRemaining=Math.max(0,bonusRemaining-.25);updateHUD();if(bonusRemaining<=0)releaseBonusGuardians();},250);
   }
   function startBonusLevel(afterLevel){
-    stopMoving();stopMusic();clearInterval(enemyTimer);clearInterval(bonusTimer);bonusMode=true;bonusForLevel=afterLevel;level=afterLevel;bonusStarsStart=stars;bonusStarsCollected=0;bonusRemaining=30;bonusGuardiansReleased=false;
+    stopMoving();stopMusic();clearTimeout(enemyTimer);enemyTimer=null;clearInterval(bonusTimer);bonusMode=true;bonusForLevel=afterLevel;level=afterLevel;bonusStarsStart=stars;bonusStarsCollected=0;bonusRemaining=30;bonusGuardiansReleased=false;
     rows=23;cols=29;canvas.width=cols*TILE;canvas.height=rows*TILE;theme=themes[0];map=generateBonusMaze();player={x:1,y:1};exit={x:cols-2,y:rows-2};enemies=[];keyRequired=false;hasKey=true;portalA=portalB=null;invulnerableZones=[];ballsNeeded=1;ballsExited=0;moves=0;deathReason='Un gardien t’a touché.';
     starsRemaining=15+Math.floor(Math.random()*11);const wanted=starsRemaining;for(let n=0;n<wanted;n++){const p=randomFreeCell(2);if(p)map[p.y][p.x]='S';else {starsRemaining=n;break;}}levelStarsTotal=starsRemaining;starAvailable=starsRemaining>0;findDeadEnds();targetMovesLow=0;targetMovesHigh=0;targetTimeLow=30;targetTimeHigh=30;
     running=true;paused=false;lastWin=false;hudNote='Bonus : collecte les étoiles avant l’arrivée des gardiens';startTime=Date.now();overlay.classList.remove('show');updateObjective('BONUS : collecte un maximum d’étoiles et atteins la sortie en 30 secondes. Ensuite, six gardiens apparaîtront.');renderBoostSlots();startBonusCountdown();if(audioCtx&&musicEnabled)startMusic();draw();saveGame();
@@ -448,7 +459,7 @@
   }
   function updateHUD(note=null){
     if(note!==null)hudNote=note;const collected=Math.max(0,levelStarsTotal-starsRemaining),levelLabel=bonusMode?`${bonusForLevel} bis`:level,guardLabel=enemies?.length||0,timeLabel=bonusMode&&!bonusGuardiansReleased?` · ⏱️ ${Math.ceil(bonusRemaining)} s`:'';
-    status.textContent=`${currentPlayer} · Niveau ${levelLabel} · Biome ${theme?.name||'Nuit'} · ${guardLabel} gardien${guardLabel>1?'s':''} · ⭐ Niveau ${collected}/${levelStarsTotal} · Réserve ${stars} · ${lives} vie${lives>1?'s':''}${timeLabel}${hudNote?` · ${hudNote}`:''}`;
+    status.textContent=`${currentPlayer} · ${trainingMode?'ENTRAÎNEMENT · ':''}Niveau ${levelLabel} · Biome ${theme?.name||'Nuit'} · ${guardLabel} gardien${guardLabel>1?'s':''} · ⭐ Niveau ${collected}/${levelStarsTotal} · Réserve ${stars} · ${lives} vie${lives>1?'s':''}${timeLabel}${hudNote?` · ${hudNote}`:''}`;
   }
   function updateObjective(note=''){
     if(note)hudNote=note;
@@ -459,15 +470,17 @@
     if(invulnerableZones.length)goals.push('les refuges 🛡️ rendent la boule invulnérable');
     if(ballsNeeded===2)goals.push(`fais sortir ${2-ballsExited} boule${2-ballsExited>1?'s':''}`);
     const estimate=bonusMode?'Défi bonus : sortie avant la fin du décompte de 30 secondes.':`Repères : ${targetMovesLow}–${targetMovesHigh} déplacements · ${targetTimeLow}–${targetTimeHigh} s.`;
-    const context=`Biome : ${theme.name} · Gardiens : ${enemies?.length||0} · Étoiles du niveau : ${Math.max(0,levelStarsTotal-starsRemaining)}/${levelStarsTotal} · Vies : ${lives}. `;
+    const context=`${trainingMode?'Mode entraînement · ':''}Biome : ${theme.name} · Gardiens : ${enemies?.length||0} · Étoiles du niveau : ${Math.max(0,levelStarsTotal-starsRemaining)}/${levelStarsTotal} · Vies : ${lives}. `;
     subtitle.textContent=context+(note?`${note} `:`${goals.length?'Objectifs : '+goals.join(' · '):`Traverse le biome ${theme.name}.`} Évite les gardiens et les dangers. `)+estimate;updateHUD();
   }
   function gameSnapshot(){return {playerName:currentPlayer,savedAt:Date.now(),level,lives,stars,totalWins,unlocked,guardianUnlocked,selectedSkin,selectedGuardianSkin,level5RewardGiven,rows,cols,map,player,exit,enemies,keyRequired,hasKey,starAvailable,starsRemaining,levelStarsTotal,portalA,portalB,invulnerableZones,ballsNeeded,ballsExited,moves,elapsed:Math.max(0,Math.round((Date.now()-startTime)/1000)),targetMovesLow,targetMovesHigh,targetTimeLow,targetTimeHigh,boostInventory,activeEffects,bonusMode,bonusForLevel,bonusStarsStart,bonusStarsCollected,bonusRemaining,bonusGuardiansReleased};}
   function savedProfiles(kind){try{return JSON.parse(localStorage.getItem(kind))||{};}catch(_){return {};}}
+  function trainingWinsFor(name=currentPlayer){try{return Number((JSON.parse(localStorage.getItem('bouleBleueTrainingWins'))||{})[name]||0);}catch(_){return 0;}}
+  function addTrainingWin(){const wins=savedProfiles('bouleBleueTrainingWins'),next=(Number(wins[currentPlayer])||0)+1;wins[currentPlayer]=next;localStorage.setItem('bouleBleueTrainingWins',JSON.stringify(wins));return next;}
   function saveGame(){
-    if(!map||!player)return;try{const saves=savedProfiles('bouleBleueAutoSaves');saves[currentPlayer]=gameSnapshot();localStorage.setItem('bouleBleueAutoSaves',JSON.stringify(saves));localStorage.setItem('bouleBleueSave',JSON.stringify(saves[currentPlayer]));saveSkins();}catch(_){}
+    if(trainingMode||!map||!player)return;try{const saves=savedProfiles('bouleBleueAutoSaves');saves[currentPlayer]=gameSnapshot();localStorage.setItem('bouleBleueAutoSaves',JSON.stringify(saves));localStorage.setItem('bouleBleueSave',JSON.stringify(saves[currentPlayer]));saveSkins();}catch(_){}
   }
-  function manualSave(){if(!map||!player)return;const saves=savedProfiles('bouleBleueManualSaves');saves[currentPlayer]=gameSnapshot();localStorage.setItem('bouleBleueManualSaves',JSON.stringify(saves));saveGame();alert(`Partie de ${currentPlayer} sauvegardée au niveau ${bonusMode?bonusForLevel+' bis':level}.`);}
+  function manualSave(){if(trainingMode){alert('Le mode entraînement ne modifie pas les sauvegardes de l’aventure.');return;}if(!map||!player)return;const saves=savedProfiles('bouleBleueManualSaves');saves[currentPlayer]=gameSnapshot();localStorage.setItem('bouleBleueManualSaves',JSON.stringify(saves));saveGame();alert(`Partie de ${currentPlayer} sauvegardée au niveau ${bonusMode?bonusForLevel+' bis':level}, avec son inventaire complet.`);}
   function bestProfileSave(name){const a=savedProfiles('bouleBleueAutoSaves')[name],m=savedProfiles('bouleBleueManualSaves')[name];if(!a)return m;if(!m)return a;const progress=s=>(s.level||0)+(s.bonusMode?0.5:0);return progress(a)>progress(m)||progress(a)===progress(m)&&(a.savedAt||0)>(m.savedAt||0)?a:m;}
   function restoreGame(snapshot=null){
     let s=snapshot||bestProfileSave(currentPlayer);if(!s){try{s=JSON.parse(localStorage.getItem('bouleBleueSave'));}catch(_){return false;}}if(!s?.map)return false;
@@ -476,7 +489,7 @@
   }
   function reset(){
     stopMoving();
-    clearInterval(enemyTimer);clearInterval(bonusTimer);bonusMode=false;bonusGuardiansReleased=false;hudNote='Début du niveau';
+    clearTimeout(enemyTimer);enemyTimer=null;clearInterval(bonusTimer);bonusMode=false;bonusGuardiansReleased=false;hudNote='Début du niveau';
     rows=oddSize(15,level); cols=oddSize(19,level);
     canvas.width=cols*TILE; canvas.height=rows*TILE;
     theme=themes[Math.floor((level-1)/3)%themes.length];
@@ -492,22 +505,27 @@
     running=true; paused=false; lastWin=false; moves=0; startTime=Date.now(); overlay.classList.remove('show');
     status.textContent=`${currentPlayer} · Niveau ${level} · ${theme.name} · ${enemyCount} gardiens · ${lives} vie${lives>1?'s':''} · ⭐ ${stars}${ballsNeeded===2?' · 2 boules':''}`;
     updateObjective();
-    renderBoostSlots();startEnemyMotion();if(audioCtx&&musicEnabled)startMusic();draw();saveGame();
+    renderBoostSlots();startEnemyMotion();if(audioCtx&&musicEnabled)startMusic();draw();requestAnimationFrame(()=>draw());setTimeout(draw,80);saveGame();
   }
-  function startEnemyMotion(){clearInterval(enemyTimer);const baseDelay=740-Math.min(level-1,9)*7-Math.max(0,level-75)*2;enemyTimer=setInterval(moveEnemies,Math.max(600,baseDelay)*(effectActive('slow')?2:1));}
+  function startEnemyMotion(){
+    clearTimeout(enemyTimer);const baseDelay=740-Math.min(level-1,9)*7-Math.max(0,level-75)*2,delay=Math.max(600,baseDelay)*(effectActive('slow')?2:1);
+    const tick=()=>{if(!running||paused){enemyTimer=null;return;}moveEnemies();if(running&&!paused)enemyTimer=setTimeout(tick,delay);else enemyTimer=null;};
+    enemyTimer=setTimeout(tick,delay);
+  }
   function showMenu(){
-    saveGame();stopMoving();stopMusic();clearInterval(enemyTimer);clearInterval(bonusTimer); running=false; paused=true; gameUI.classList.add('hidden'); startScreen.classList.remove('hidden');
+    saveGame();stopMoving();stopMusic();clearTimeout(enemyTimer);enemyTimer=null;clearInterval(bonusTimer); running=false; paused=true; gameUI.classList.add('hidden'); startScreen.classList.remove('hidden');
     document.querySelector('#playBtn').textContent='Reprendre';
     if(audioCtx&&musicEnabled)startMenuMusic();
   }
   function playGame(){
     startScreen.classList.add('hidden'); skinScreen.classList.add('hidden'); gameUI.classList.remove('hidden');
-    if(paused&&!overlay.classList.contains('show')){running=true;paused=false;if(bonusMode){if(bonusGuardiansReleased)startEnemyMotion();else startBonusCountdown();}else startEnemyMotion();startMusic();draw();}
+    if(!overlay.classList.contains('show')){running=true;paused=false;if(bonusMode){if(bonusGuardiansReleased)startEnemyMotion();else startBonusCountdown();}else startEnemyMotion();startMusic();}
+    draw();requestAnimationFrame(()=>draw());setTimeout(draw,80);
   }
   function openSkins(){renderSkins();renderGuardianSkins();renderBoostShop();startScreen.classList.add('hidden');gameUI.classList.add('hidden');skinScreen.classList.remove('hidden');}
   function validDirs(e){
     let dirs=[[0,-1],[0,1],[-1,0],[1,0]].filter(([dx,dy])=>open(e.x+dx,e.y+dy)&&!(e.x+dx===exit.x&&e.y+dy===exit.y)&&map[e.y+dy][e.x+dx]!=='P'&&!(ballsNeeded===2&&ballsExited===0&&e.x+dx===1&&e.y+dy===1));
-    if(deadEndCells.has(key(player.x,player.y))){const current=Math.abs(e.x-player.x)+Math.abs(e.y-player.y),safer=dirs.filter(([dx,dy])=>!deadEndCells.has(key(e.x+dx,e.y+dy))||Math.abs(e.x+dx-player.x)+Math.abs(e.y+dy-player.y)>=current);if(safer.length)dirs=safer;}
+    if(deadEndCells.has(key(player.x,player.y)))dirs=dirs.filter(([dx,dy])=>e.x+dx!==player.x||e.y+dy!==player.y);
     return dirs;
   }
   function approachSide(x,y){const dx=x-player.x,dy=y-player.y;if(Math.abs(dx)>=Math.abs(dy))return dx<0?'L':'R';return dy<0?'U':'D';}
@@ -564,10 +582,27 @@
       else finish(true);
     }
   }
+  function restoreAdventureAfterTraining(rewardStars=0){
+    const base=trainingBaseSnapshot;trainingMode=false;trainingRewardBonus=false;trainingBonusPending=false;trainingBaseSnapshot=null;
+    if(base)restoreGame(base);else{level=1;lives=0;stars=0;boostInventory={};reset();running=false;paused=true;}
+    if(rewardStars>0){stars+=rewardStars;saveSkins();saveGame();}
+  }
   function finish(win){
-    if(!running)return; stopMoving();stopMusic();running=false; lastWin=win; clearInterval(enemyTimer);clearInterval(bonusTimer);
+    if(!running)return; stopMoving();stopMusic();running=false; lastWin=win; clearTimeout(enemyTimer);enemyTimer=null;clearInterval(bonusTimer);
     document.querySelector('#endShopBtn').classList.add('hidden');document.querySelector('#endLoadBtn').classList.add('hidden');document.querySelector('#playAgain').classList.remove('hidden');
     const seconds=Math.round((Date.now()-startTime)/1000);
+    if(trainingMode&&trainingRewardBonus&&bonusMode){
+      const earned=win?bonusStarsCollected:0;restoreAdventureAfterTraining(earned);trainingSessionFinished=true;lastWin=false;
+      document.querySelector('#result').textContent=win?'Bonus entraînement réussi !':'Bonus entraînement perdu';document.querySelector('#result').style.color=win?'var(--green)':'var(--red)';
+      document.querySelector('#message').textContent=win?`Bravo ${currentPlayer} ! ${earned} étoile${earned>1?'s':''} du niveau bonus ont été ajoutées à ton véritable inventaire.`:`${currentPlayer}, aucune vie n’est perdue et les étoiles de ce bonus ne sont pas ajoutées à l’inventaire.`;
+      document.querySelector('#playAgain').textContent='Retour au menu';overlay.classList.add('show');return;
+    }
+    if(trainingMode&&!bonusMode){
+      const wins=addTrainingWin();trainingBonusPending=wins%10===0;
+      document.querySelector('#result').textContent=win?'Entraînement réussi !':'Entraînement terminé';document.querySelector('#result').style.color=win?'var(--green)':'var(--red)';
+      document.querySelector('#message').textContent=trainingBonusPending?'Vos entrainements ont débloqué un niveau bonus ! Collectez les étoiles pour les ajouter à votre inventaire !':win?`Bravo ${currentPlayer} ! Entraînement réussi en ${moves} déplacements et ${seconds} secondes. Compteur bonus : ${wins%10}/10.`:`${currentPlayer}, cet échec ne retire aucune vie et ne modifie pas ton inventaire réel. Compteur bonus : ${wins%10}/10.`;
+      document.querySelector('#playAgain').textContent=trainingBonusPending?'Jouer le niveau bonus':'Choisir un autre niveau';status.textContent=`${currentPlayer} · Entraînement ${win?'réussi':'terminé'} · compteur bonus ${wins%10}/10`;overlay.classList.add('show');return;
+    }
     if(bonusMode){
       if(!win){stars=bonusStarsStart;bonusStarsCollected=0;saveSkins();sfx('collision');}else{sfx('victory');saveSkins();}
       document.querySelector('#result').textContent=win?'Bonus réussi !':'Bonus perdu';
@@ -649,6 +684,8 @@
   });
   document.addEventListener('keyup',e=>{if(keys[e.key]&&heldDirection===e.key)stopMoving();});
   window.addEventListener('blur',stopMoving);
+  window.addEventListener('resize',()=>{if(map&&player)requestAnimationFrame(()=>draw());});
+  window.addEventListener('orientationchange',()=>setTimeout(()=>{if(map&&player)draw();},120));
   document.querySelectorAll('[data-dx]').forEach(b=>{
     b.addEventListener('pointerdown',e=>{e.preventDefault();b.setPointerCapture?.(e.pointerId);startMoving(+b.dataset.dx,+b.dataset.dy);});
     ['pointerup','pointercancel','lostpointercapture'].forEach(type=>b.addEventListener(type,stopMoving));
@@ -670,30 +707,43 @@
   function profileNames(){return [...new Set([...Object.keys(savedProfiles('bouleBleueAutoSaves')),...Object.keys(savedProfiles('bouleBleueManualSaves'))])].slice(0,5);}
   function renderProfileList(){const select=document.querySelector('#profileSelect'),names=profileNames();select.innerHTML='';if(!names.length){const o=document.createElement('option');o.textContent='Aucune partie sauvegardée';o.value='';select.appendChild(o);return;}names.forEach(name=>{const s=bestProfileSave(name),o=document.createElement('option');o.value=name;o.textContent=`${name} — niveau ${s.bonusMode?s.bonusForLevel+' bis':s.level}`;select.appendChild(o);});}
   function openLoadScreen(){renderProfileList();startScreen.classList.add('hidden');gameUI.classList.add('hidden');loadScreen.classList.remove('hidden');}
-  function requestNewPlayer(){let name=prompt('Nom du joueur / profil :',currentPlayer==='Joueur'?'':currentPlayer);if(name===null)return;name=name.trim().replace(/[<>]/g,'').slice(0,24);if(!name){alert('Indiquez un nom de joueur.');return;}const names=profileNames();if(!names.includes(name)&&names.length>=5){alert('Cinq profils sont déjà enregistrés. Chargez l’un d’eux pour continuer.');return;}currentPlayer=name;level=1;lives=0;stars=0;totalWins=0;boostInventory={};activeEffects={};unlocked=['blue'];guardianUnlocked=['redOrb'];selectedSkin='blue';selectedGuardianSkin='redOrb';level5RewardGiven=false;startScreen.classList.add('hidden');gameUI.classList.remove('hidden');requestLandscape();reset();}
-  async function requestLandscape(){try{if(screen.orientation?.lock)await screen.orientation.lock('landscape');}catch(_){} }
+  function openTrainingScreen(){
+    const select=document.querySelector('#trainingLevel');select.innerHTML='';[1,10,20,30,40,50,60,70,80,90,100].forEach(n=>{const o=document.createElement('option');o.value=String(n);o.textContent=`Niveau ${n}`;select.appendChild(o);});
+    const wins=trainingWinsFor(),remaining=10-(wins%10||0);document.querySelector('#trainingProgress').textContent=`Choix libre à chaque partie, sans progression de niveaux. Entraînements terminés par ${currentPlayer} : ${wins} · prochain bonus dans ${remaining} partie${remaining>1?'s':''}.`;startScreen.classList.add('hidden');trainingScreen.classList.remove('hidden');
+  }
+  function startTraining(){
+    saveGame();trainingBaseSnapshot=JSON.parse(JSON.stringify(gameSnapshot()));trainingMode=true;trainingRewardBonus=false;trainingBonusPending=false;trainingSessionFinished=false;level=Number(document.querySelector('#trainingLevel').value)||1;lives=0;stars=0;boostInventory=JSON.parse(JSON.stringify(trainingBaseSnapshot.boostInventory||{}));activeEffects={};trainingScreen.classList.add('hidden');gameUI.classList.remove('hidden');reset();updateObjective(`Entraînement niveau ${level} : les gains et pertes de cette partie n’affectent pas ton aventure.`);
+  }
+  function startTrainingRewardBonus(){trainingRewardBonus=true;trainingBonusPending=false;overlay.classList.remove('show');startBonusLevel(10);updateObjective('BONUS D’ENTRAÎNEMENT : les étoiles seront ajoutées à ton véritable inventaire si tu atteins la sortie.');}
+  function leaveTraining(){restoreAdventureAfterTraining(0);trainingSessionFinished=false;overlay.classList.remove('show');showMenu();openTrainingScreen();}
+  function requestNewPlayer(){let name=prompt('Nom du joueur / profil :',currentPlayer==='Joueur'?'':currentPlayer);if(name===null)return;name=name.trim().replace(/[<>]/g,'').slice(0,24);if(!name){alert('Indiquez un nom de joueur.');return;}const names=profileNames();if(!names.includes(name)&&names.length>=5){alert('Cinq profils sont déjà enregistrés. Chargez l’un d’eux pour continuer.');return;}currentPlayer=name;level=1;lives=0;stars=0;totalWins=0;boostInventory={};activeEffects={};unlocked=['blue'];guardianUnlocked=['redOrb'];selectedSkin='blue';selectedGuardianSkin='redOrb';level5RewardGiven=false;startScreen.classList.add('hidden');gameUI.classList.remove('hidden');reset();}
   document.querySelector('#restart').onclick=reset;
   document.querySelector('#menuBtn').onclick=showMenu;
   document.querySelector('#soundBtn').onclick=toggleSound;
   document.querySelector('#soundGameBtn').onclick=toggleSound;
   document.querySelector('#musicBtn').onclick=toggleMusic;
   document.querySelector('#musicGameBtn').onclick=toggleMusic;
-  document.querySelector('#playBtn').onclick=()=>{requestLandscape();playGame();};
+  document.querySelector('#playBtn').onclick=playGame;
   document.querySelector('#newGameBtn').onclick=requestNewPlayer;
+  document.querySelector('#trainingBtn').onclick=openTrainingScreen;
+  document.querySelector('#trainingBackBtn').onclick=()=>{trainingScreen.classList.add('hidden');startScreen.classList.remove('hidden');};
+  document.querySelector('#startTrainingBtn').onclick=startTraining;
   document.querySelector('#saveBtn').onclick=manualSave;
   document.querySelector('#loadBtn').onclick=openLoadScreen;
   document.querySelector('#loadBackBtn').onclick=()=>{loadScreen.classList.add('hidden');startScreen.classList.remove('hidden');};
-  document.querySelector('#loadProfileBtn').onclick=()=>{const name=document.querySelector('#profileSelect').value,s=name&&bestProfileSave(name);if(!s)return;currentPlayer=name;if(restoreGame(s)){loadScreen.classList.add('hidden');requestLandscape();playGame();}};
+  document.querySelector('#loadProfileBtn').onclick=()=>{const name=document.querySelector('#profileSelect').value,s=name&&bestProfileSave(name);if(!s)return;currentPlayer=name;if(restoreGame(s)){loadScreen.classList.add('hidden');playGame();}};
   document.querySelector('#skinBtn').onclick=openSkins;
   document.querySelector('#scoreBtn').onclick=()=>{renderScores();startScreen.classList.add('hidden');scoreScreen.classList.remove('hidden');};
   document.querySelector('#scoreBackBtn').onclick=()=>{scoreScreen.classList.add('hidden');startScreen.classList.remove('hidden');};
-  let installPrompt=null;window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();installPrompt=e;document.querySelector('#installBtn').classList.remove('hidden');});
-  document.querySelector('#installBtn').onclick=async()=>{if(!installPrompt)return;installPrompt.prompt();await installPrompt.userChoice;installPrompt=null;document.querySelector('#installBtn').classList.add('hidden');};
+  let installPrompt=null;window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();installPrompt=e;document.querySelector('#installBtn').textContent='📲 Installer l’application';});
+  document.querySelector('#installBtn').onclick=async()=>{if(installPrompt){installPrompt.prompt();await installPrompt.userChoice;installPrompt=null;return;}if(location.protocol==='file:'){alert('Pour installer le jeu, ouvre la version en ligne : https://sattasam.github.io/La_Boule_Bleue/');return;}const ios=/iphone|ipad|ipod/i.test(navigator.userAgent);alert(ios?'Sur iPhone ou iPad : touche le bouton Partager de Safari, puis « Sur l’écran d’accueil ».':'Dans le menu de ton navigateur, choisis « Installer l’application » ou « Ajouter à l’écran d’accueil ».');};
   document.querySelector('#skinBackBtn').onclick=()=>{skinScreen.classList.add('hidden');startScreen.classList.remove('hidden');};
   document.querySelector('#skinPlayBtn').onclick=()=>{skinScreen.classList.add('hidden');gameUI.classList.remove('hidden');reset();};
   document.querySelector('#endShopBtn').onclick=()=>{overlay.classList.remove('show');openSkins();};
   document.querySelector('#endLoadBtn').onclick=()=>{const s=bestProfileSave(currentPlayer);if(s){overlay.classList.remove('show');restoreGame(s);playGame();}else{overlay.classList.remove('show');showMenu();}};
   document.querySelector('#playAgain').onclick=()=>{
+    if(trainingSessionFinished){trainingSessionFinished=false;overlay.classList.remove('show');showMenu();openTrainingScreen();return;}
+    if(trainingMode&&!trainingRewardBonus){if(trainingBonusPending)startTrainingRewardBonus();else leaveTraining();return;}
     localStorage.removeItem('bouleBleuePendingLevel');localStorage.removeItem('bouleBleuePendingBonus');
     if(bonusMode){const next=bonusForLevel+1;bonusMode=false;level=next;reset();return;}
     if(lastWin&&level%10===0&&level<100){startBonusLevel(level);return;}
@@ -705,7 +755,7 @@
   window.addEventListener('beforeunload',saveGame);
   startScreen.addEventListener('pointerdown',()=>{if(musicEnabled&&(!audioCtx||audioCtx.state==='suspended'))startMenuMusic();},{once:true});
   saveSkins();syncSoundButtons();renderSkins();renderGuardianSkins();renderBoostShop();renderBoostSlots();let restored=false;const pendingBonus=Number(localStorage.getItem('bouleBleuePendingBonus')||0),pendingLevel=Number(localStorage.getItem('bouleBleuePendingLevel')||0);if(LEVEL_100_TEST_MODE){localStorage.removeItem('bouleBleuePendingBonus');localStorage.removeItem('bouleBleuePendingLevel');localStorage.removeItem('bouleBleueSave');level=100;reset();}else if(BONUS_TEST_MODE){localStorage.removeItem('bouleBleuePendingBonus');localStorage.removeItem('bouleBleuePendingLevel');localStorage.removeItem('bouleBleueSave');startBonusLevel(10);}else if(pendingBonus){localStorage.removeItem('bouleBleuePendingBonus');localStorage.removeItem('bouleBleueSave');startBonusLevel(pendingBonus);}else if(pendingLevel){level=pendingLevel;localStorage.removeItem('bouleBleuePendingLevel');localStorage.removeItem('bouleBleueSave');reset();}else restored=restoreGame();if(!LEVEL_100_TEST_MODE&&!BONUS_TEST_MODE&&!pendingBonus&&!pendingLevel&&!restored)reset();showMenu();document.querySelector('#playBtn').textContent=`Reprendre${restored?' · '+currentPlayer+' · niveau '+(bonusMode?bonusForLevel+' bis':level):''}`;
-  if('serviceWorker'in navigator&&location.protocol!=='file:')navigator.serviceWorker.register('./service-worker.js').catch(()=>{});
+  if('serviceWorker'in navigator&&location.protocol!=='file:')navigator.serviceWorker.register('./service-worker.js').then(reg=>reg.update()).catch(()=>{});
 })();
 </script>
 </body>
