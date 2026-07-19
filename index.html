@@ -17,7 +17,7 @@
     main { width:min(94vw,760px); text-align:center; }
     h1 { margin:0 0 6px; font-size:clamp(1.7rem,5vw,2.8rem); }
     .subtitle { margin:0 0 14px; color:#a9bdd8; }
-    .bar { display:flex; justify-content:space-between; gap:12px; align-items:center; margin:0 auto 10px; max-width:672px; font-weight:700; }
+    .bar { display:flex; flex-wrap:wrap; justify-content:space-between; gap:8px 12px; align-items:center; margin:0 auto 10px; max-width:672px; font-weight:700; }
     #status { color:#9ed5ff; }
     button { border:1px solid #4f79a6; border-radius:10px; padding:8px 14px; color:white; background:#17375c; cursor:pointer; font-weight:700; }
     button:hover { background:#245184; }
@@ -26,6 +26,7 @@
     .menu-card { width:min(92vw,570px); max-height:92dvh; overflow:auto; padding:38px 28px; text-align:center; border:2px solid #d6b63c; border-radius:22px; background:#091d42ed; box-shadow:0 20px 70px #000b,0 0 35px #315d9b88; }
     .menu-card h1 { color:#fff3a0; text-shadow:0 0 18px #ffd94a88; }
     .menu-actions { display:flex; flex-wrap:wrap; justify-content:center; gap:12px; margin-top:24px; }
+    .menu-actions.ordered { display:grid; grid-template-columns:1fr; max-width:330px; margin:22px auto 0; }
     .menu-actions button { min-width:150px; padding:12px 20px; font-size:1.05rem; }
     .menu-actions .mini-button { min-width:auto; padding:7px 12px; font-size:.78rem; }
     .skin-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(92px,1fr)); gap:9px; max-height:29vh; overflow:auto; margin:12px 0 20px; }
@@ -35,9 +36,10 @@
     .skin-choice.locked { filter:grayscale(1); opacity:.48; cursor:not-allowed; }
     .button-row { display:flex; gap:8px; flex-wrap:wrap; justify-content:flex-end; }
     .credits { margin:26px 0 -20px; color:#7890ad; font-size:.68rem; letter-spacing:.02em; }
-    .boost-slots { display:grid; grid-template-columns:repeat(4,minmax(70px,1fr)); gap:6px; max-width:672px; margin:0 auto 5px; }
+    .boost-slots { display:grid; grid-template-columns:repeat(5,minmax(62px,1fr)); gap:6px; max-width:672px; margin:0 auto 5px; }
     .boost-slot { min-height:42px; padding:5px 4px; font-size:.72rem; border-style:dashed; }
     .boost-slot.empty { opacity:.42; cursor:default; }
+    .boost-slot.active { border-style:solid; border-color:#ffd94a; background:#214f78; box-shadow:0 0 8px #ffd94a66; }
     .score-table { width:100%; border-collapse:collapse; margin:18px 0; font-size:.9rem; }
     .score-table th,.score-table td { padding:8px 5px; border-bottom:1px solid #29486e; text-align:center; }
     .game-shell { position:relative; width:fit-content; max-width:100%; margin:auto; padding:11px; }
@@ -46,15 +48,16 @@
     .proximity-marker.tl { left:0; top:0; }.proximity-marker.tr { right:0; top:0; }.proximity-marker.bl { left:0; bottom:0; }.proximity-marker.br { right:0; bottom:0; }
     .proximity-marker.yellow { background:#ffe34d;box-shadow:0 0 9px #ffe34d; }.proximity-marker.orange { background:#ff941f;box-shadow:0 0 10px #ff7a16; }.proximity-marker.red { background:#ff263f;box-shadow:0 0 12px #ff1838; }
     canvas { display:block; max-width:100%; max-height:calc(100dvh - 235px); width:auto; height:auto; image-rendering:auto; touch-action:none; user-select:none; -webkit-user-select:none; }
-    .overlay { position:absolute; inset:0; display:none; place-items:center; padding:20px; background:#030812d9; backdrop-filter:blur(3px); }
+    .overlay { position:absolute; inset:0; display:none; place-items:center; padding:12px; overflow:auto; background:#030812d9; backdrop-filter:blur(3px); }
     .overlay.show { display:grid; }
-    .card { padding:25px; border:1px solid #4e7197; border-radius:16px; background:#0d1b30ed; box-shadow:0 15px 40px #000a; }
+    .card { width:min(94%,520px); max-height:calc(100% - 12px); overflow:auto; padding:22px; border:1px solid #4e7197; border-radius:16px; background:#0d1b30f5; box-shadow:0 15px 40px #000a; }
     .card h2 { margin:0 0 8px; font-size:2rem; }
     .card p { margin:0 0 18px; color:#c8d8eb; }
     .help { color:#91a8c3; font-size:.92rem; margin:12px 0 0; }
     .touch { display:grid; grid-template-columns:repeat(3,52px); justify-content:center; gap:6px; margin-top:14px; }
     .touch button { padding:0; height:48px; font-size:1.3rem; touch-action:manipulation; }
     .touch .up { grid-column:2; } .touch .left { grid-column:1; grid-row:2; } .touch .down { grid-column:2; grid-row:2; } .touch .right { grid-column:3; grid-row:2; }
+    #orientationHint { display:none; position:fixed; inset:0; z-index:99; place-items:center; padding:30px; background:#06152f; font-size:1.2rem; text-align:center; }
     @media (min-width:700px) and (pointer:fine) { .touch { display:none; } }
     @media (max-width:699px), (pointer:coarse) {
       body { padding:8px; align-items:start; }
@@ -64,7 +67,7 @@
       .bar { margin-bottom:6px; font-size:.78rem; align-items:flex-start; }
       .button-row { gap:4px; }
       .button-row button { padding:7px 8px; font-size:.76rem; }
-      .boost-slots { grid-template-columns:repeat(4,1fr); gap:3px; }
+      .boost-slots { grid-template-columns:repeat(5,1fr); gap:3px; }
       .boost-slot { min-width:0; padding:4px 2px; font-size:.62rem; }
       .game-shell { max-width:100%; padding:9px; }
       .game { max-width:100%; }
@@ -74,6 +77,10 @@
       .help { margin-top:6px; font-size:.76rem; }
       .menu-card { padding:28px 16px; }
     }
+    @media (orientation:portrait) and (pointer:coarse) and (max-width:900px) { #gameUI:not(.hidden)~#orientationHint { display:grid; } }
+    @media (orientation:landscape) and (pointer:coarse) {
+      body{padding:4px;align-items:start} main{width:100%} main>h1{display:none}.subtitle{font-size:.72rem;margin:1px 0 3px}.bar{margin-bottom:3px;font-size:.7rem}.boost-slots{margin-bottom:2px}.game-shell{padding:7px}.touch{position:fixed;right:8px;bottom:8px;opacity:.82;z-index:8}.help{display:none}canvas{max-height:calc(100dvh - 112px);max-width:calc(100vw - 205px)}
+    }
   </style>
 </head>
 <body>
@@ -81,11 +88,12 @@
   <div class="menu-card">
     <h1>La Boule Bleue</h1>
     <p>Échappe aux gardiens, traverse les biomes et collectionne les skins !</p>
-    <p id="testNotice">Aventure complète : départ au niveau 1 avec trois gardiens.</p>
-    <div class="menu-actions"><button id="playBtn">Jouer</button><button id="newGameBtn">Nouvelle partie</button><button id="skinBtn">Boutique</button><button id="scoreBtn" class="mini-button">Scores</button><button id="installBtn" class="hidden">Installer l’application</button><button id="soundBtn">Bruitages : activés</button><button id="musicBtn">Musique : activée</button></div>
+    <p id="testNotice">Aventure complète : 100 niveaux et niveaux bonus 10 bis, 20 bis…</p>
+    <div class="menu-actions ordered"><button id="playBtn">Reprendre</button><button id="skinBtn">Boutique</button><button id="newGameBtn">Nouvelle partie</button><button id="saveBtn">Sauvegarder</button><button id="loadBtn">Charger une partie</button><button id="scoreBtn">Score</button><button id="soundBtn">🔊 Bruitages : activés</button><button id="musicBtn">🎵 Musique : activée</button><button id="installBtn" class="hidden">Installer l’application</button></div>
     <p class="credits">Concepteurs du jeu : Yllias et Sam LEULEU</p>
   </div>
 </section>
+<section id="loadScreen" class="menu-screen hidden"><div class="menu-card"><h1>Charger une partie</h1><p>Jusqu’à cinq profils peuvent être conservés.</p><select id="profileSelect" style="width:100%;padding:12px;border-radius:9px;background:#102b4d;color:white"></select><div class="menu-actions"><button id="loadProfileBtn">Charger</button><button id="loadBackBtn">Retour</button></div></div></section>
 <section id="scoreScreen" class="menu-screen hidden">
   <div class="menu-card"><h1>Meilleurs records</h1><div id="scoreList"></div><div class="menu-actions"><button id="scoreBackBtn">Retour</button></div></div>
 </section>
@@ -100,7 +108,7 @@
     <p>Un skin de gardien aléatoire se débloque toutes les 5 victoires.</p>
     <div id="guardianSkinGrid" class="skin-grid"></div>
     <h2>Boosts et vies</h2>
-    <p>Les boosts occupent au maximum quatre emplacements. Les vies sont ajoutées directement.</p>
+    <p>Chaque achat fournit un exemplaire. Cinq catégories maximum peuvent être empilées ; les vies alimentent directement le compteur.</p>
     <div id="boostShopGrid" class="skin-grid"></div>
     <div class="menu-actions"><button id="skinPlayBtn">Choisir et rejouer</button><button id="skinBackBtn">Retour</button></div>
   </div>
@@ -114,7 +122,7 @@
     <i id="proxTL" class="proximity-marker tl"></i><i id="proxTR" class="proximity-marker tr"></i><i id="proxBL" class="proximity-marker bl"></i><i id="proxBR" class="proximity-marker br"></i>
     <div class="game">
       <canvas id="canvas" aria-label="Jeu de labyrinthe"></canvas>
-      <div id="overlay" class="overlay"><div class="card"><h2 id="result"></h2><p id="message"></p><button id="playAgain">Rejouer</button></div></div>
+      <div id="overlay" class="overlay"><div class="card"><h2 id="result"></h2><p id="message"></p><div class="menu-actions"><button id="playAgain">Rejouer</button><button id="endShopBtn" class="hidden">Acheter des vies dans la boutique et continuer</button><button id="endLoadBtn" class="hidden">Reprendre la dernière partie sauvegardée</button></div></div></div>
     </div>
   </div>
   <div class="touch" aria-label="Commandes tactiles">
@@ -122,15 +130,17 @@
   </div>
   <p class="help">Ordinateur : flèches du clavier · Mobile : boutons tactiles ou glissement du doigt</p>
 </main>
+<div id="orientationHint">📱 Tournez votre appareil en mode paysage pour jouer.</div>
 <script>
 (() => {
   const TILE=24;
-  let rows=15, cols=19, level=1, lastWin=false, lives=0, stars=0, paused=true;
+  const BONUS_TEST_MODE=false,LEVEL_100_TEST_MODE=false;
+  let rows=15,cols=19,level=1,lastWin=false,lives=0,stars=0,paused=true,bonusMode=false,bonusForLevel=0,bonusStarsStart=0,bonusStarsCollected=0,bonusRemaining=30,bonusTimer=null,bonusGuardiansReleased=false;
   const canvas=document.querySelector('#canvas'), ctx=canvas.getContext('2d');
   const overlay=document.querySelector('#overlay'), status=document.querySelector('#status'), subtitle=document.querySelector('#subtitle');
-  const startScreen=document.querySelector('#startScreen'),skinScreen=document.querySelector('#skinScreen'),scoreScreen=document.querySelector('#scoreScreen'),gameUI=document.querySelector('#gameUI');
-  let map, player, exit, enemies, running, enemyTimer, startTime, moves, theme, ballsNeeded, ballsExited, deathReason;
-  let keyRequired=false,hasKey=false,starAvailable=false,starsRemaining=0,portalA=null,portalB=null,deadEndCells=new Set(),generationCount=0,generationsSincePortal=0,nextPortalGap=3+Math.floor(Math.random()*2),targetMovesLow=0,targetMovesHigh=0,targetTimeLow=0,targetTimeHigh=0;
+  const startScreen=document.querySelector('#startScreen'),skinScreen=document.querySelector('#skinScreen'),scoreScreen=document.querySelector('#scoreScreen'),loadScreen=document.querySelector('#loadScreen'),gameUI=document.querySelector('#gameUI');
+  let map, player, exit, enemies, running, enemyTimer, startTime, moves, theme, ballsNeeded, ballsExited, deathReason,lastEnemySave=0;
+  let keyRequired=false,hasKey=false,starAvailable=false,starsRemaining=0,levelStarsTotal=0,portalA=null,portalB=null,invulnerableZones=[],deadEndCells=new Set(),generationCount=0,generationsSincePortal=0,nextPortalGap=3+Math.floor(Math.random()*2),targetMovesLow=0,targetMovesHigh=0,targetTimeLow=0,targetTimeHigh=0,currentPlayer='Joueur',hudNote='';
 
   const skins=[
     {id:'blue',name:'Bleu classique',color:'#38a9ff'},
@@ -151,7 +161,7 @@
     {id:'invisible',name:'Invisibilité 30 s',icon:'👁️',cost:3,duration:30},{id:'ghost',name:'Fantôme 10 s',icon:'👻',cost:2,duration:10},
     {id:'slow',name:'Ralentissement 30 s',icon:'🐌',cost:3,duration:30},{id:'magnet',name:'Aimant à clé',icon:'🧲',cost:3}
   ];
-  let unlocked=['blue'],guardianUnlocked=['redOrb'],selectedSkin='blue',selectedGuardianSkin='redOrb',level5RewardGiven=false,totalWins=0,boostInventory=[],activeEffects={};
+  let unlocked=['blue'],guardianUnlocked=['redOrb'],selectedSkin='blue',selectedGuardianSkin='redOrb',level5RewardGiven=false,totalWins=0,boostInventory={},activeEffects={};
   try{
     unlocked=JSON.parse(localStorage.getItem('bouleBleueSkins'))||['blue'];
     selectedSkin=localStorage.getItem('bouleBleueSelected')||'blue';
@@ -160,11 +170,12 @@
     level5RewardGiven=localStorage.getItem('bouleBleueLevel5Reward')==='yes';
     totalWins=Number(localStorage.getItem('bouleBleueTotalWins')||0);
     stars=Number(localStorage.getItem('bouleBleueStars')||0);
-    boostInventory=JSON.parse(localStorage.getItem('bouleBleueBoosts'))||[];
+    boostInventory=JSON.parse(localStorage.getItem('bouleBleueBoosts'))||{};if(Array.isArray(boostInventory)){const old=boostInventory;boostInventory={};old.forEach(id=>boostInventory[id]=(boostInventory[id]||0)+1);}
+    currentPlayer=localStorage.getItem('bouleBleueCurrentPlayer')||'Joueur';
     if(localStorage.getItem('bouleBleuePlayerReset')!=='reset-2026-07-18'){unlocked=['blue'];selectedSkin='blue';level5RewardGiven=false;localStorage.setItem('bouleBleuePlayerReset','reset-2026-07-18');}
     if(!guardianUnlocked.includes(selectedGuardianSkin))selectedGuardianSkin='redOrb';
   }catch(_){ }
-  function saveSkins(){try{localStorage.setItem('bouleBleueSkins',JSON.stringify(unlocked));localStorage.setItem('bouleBleueSelected',selectedSkin);localStorage.setItem('bouleBleueGuardianSkins',JSON.stringify(guardianUnlocked));localStorage.setItem('bouleBleueGuardianSkin',selectedGuardianSkin);localStorage.setItem('bouleBleueLevel5Reward',level5RewardGiven?'yes':'no');localStorage.setItem('bouleBleueTotalWins',String(totalWins));localStorage.setItem('bouleBleueStars',String(stars));localStorage.setItem('bouleBleueBoosts',JSON.stringify(boostInventory));}catch(_){}}
+  function saveSkins(){try{localStorage.setItem('bouleBleueSkins',JSON.stringify(unlocked));localStorage.setItem('bouleBleueSelected',selectedSkin);localStorage.setItem('bouleBleueGuardianSkins',JSON.stringify(guardianUnlocked));localStorage.setItem('bouleBleueGuardianSkin',selectedGuardianSkin);localStorage.setItem('bouleBleueLevel5Reward',level5RewardGiven?'yes':'no');localStorage.setItem('bouleBleueTotalWins',String(totalWins));localStorage.setItem('bouleBleueStars',String(stars));localStorage.setItem('bouleBleueBoosts',JSON.stringify(boostInventory));localStorage.setItem('bouleBleueCurrentPlayer',currentPlayer);}catch(_){}}
   function renderSkins(){
     const grid=document.querySelector('#skinGrid'); grid.innerHTML='';
     skins.forEach(s=>{
@@ -184,22 +195,34 @@
   }
   function renderBoostShop(){
     const grid=document.querySelector('#boostShopGrid');grid.innerHTML='';
-    boostCatalog.forEach(item=>{const b=document.createElement('button'),full=item.id!=='life'&&boostInventory.length>=4;b.className=`skin-choice${stars<item.cost||full?' locked':''}`;b.innerHTML=`<span class="preview">${item.icon}</span>${item.name}<br>⭐ ${item.cost}`;if(stars>=item.cost&&!full)b.onclick=()=>{stars-=item.cost;if(item.id==='life')lives++;else boostInventory.push(item.id);saveSkins();sfx('skin');renderSkins();renderBoostShop();renderBoostSlots();};grid.appendChild(b);});
+    boostCatalog.forEach(item=>{const b=document.createElement('button'),categories=new Set([...Object.keys(boostInventory).filter(id=>boostInventory[id]>0),...Object.keys(activeEffects).filter(effectActive)]).size,full=item.id!=='life'&&!boostInventory[item.id]&&!effectActive(item.id)&&categories>=5;b.className=`skin-choice${stars<item.cost?' locked':''}`;b.innerHTML=`<span class="preview">${item.icon}</span>${item.name}<br>⭐ ${item.cost} l’unité`;b.onclick=()=>{if(full){alert('Vous disposez déjà de 5 objets. Utilisez-les avant d’en acheter d’autres.');return;}if(stars<item.cost)return;stars-=item.cost;if(item.id==='life')lives++;else boostInventory[item.id]=(boostInventory[item.id]||0)+1;saveSkins();sfx('skin');renderSkins();renderBoostShop();renderBoostSlots();updateHUD('Achat ajouté à l’inventaire.');};grid.appendChild(b);});
   }
   function effectActive(id){return (activeEffects[id]||0)>Date.now();}
   function renderBoostSlots(){
     const box=document.querySelector('#boostSlots');box.innerHTML='';
-    for(let i=0;i<4;i++){const id=boostInventory[i],item=boostCatalog.find(x=>x.id===id),b=document.createElement('button');b.className=`boost-slot${item?'':' empty'}`;b.innerHTML=item?`${item.icon}<br>${item.name.split(' ')[0]}`:'Emplacement vide';if(item)b.onclick=()=>activateBoost(i);box.appendChild(b);}
+    const ids=[...new Set([...Object.keys(activeEffects).filter(effectActive),...Object.keys(boostInventory).filter(id=>boostInventory[id]>0)])].slice(0,5);for(let i=0;i<5;i++){const id=ids[i],item=boostCatalog.find(x=>x.id===id),active=effectActive(id),remaining=active?Math.max(0,Math.ceil((activeEffects[id]-Date.now())/1000)):0,b=document.createElement('button');b.className=`boost-slot${item?'':' empty'}${active?' active':''}`;b.innerHTML=item?`${item.icon} <b>${boostInventory[id]||0}</b><br>${active?`⏱ ${remaining} s`:item.name.split(' ')[0]}`:'Emplacement vide';b.title=active?`${item.name} actif : ${remaining} secondes restantes`:`Utiliser ${item.name}`;if(item&&!active&&boostInventory[id]>0)b.onclick=()=>activateBoost(id);box.appendChild(b);}
   }
-  function activateBoost(index){
-    const id=boostInventory[index],item=boostCatalog.find(x=>x.id===id);if(!item)return;
+  function activateBoost(id){
+    const item=boostCatalog.find(x=>x.id===id);if(!item||!boostInventory[id])return;
     if(id==='magnet'){
       if(!keyRequired||hasKey){updateObjective('Aucune clé à attirer dans ce niveau. L’aimant est conservé.');return;}
       for(let y=0;y<rows;y++)for(let x=0;x<cols;x++)if(map[y][x]==='K')map[y][x]=' ';
       hasKey=true;sfx('key');updateObjective('Aimant activé 🧲 : la clé est récupérée et la sortie est ouverte.');
-    }else{activeEffects[id]=Date.now()+item.duration*1000;updateObjective(`${item.icon} ${item.name} activé.`);if(id==='slow')startEnemyMotion();setTimeout(()=>{if(id==='slow')startEnemyMotion();draw();},item.duration*1000+50);}
-    boostInventory.splice(index,1);saveSkins();renderBoostSlots();draw();
+    }else{activeEffects[id]=Date.now()+item.duration*1000;updateObjective(`${item.icon} ${item.name} activé pour ${item.duration} secondes.`);if(id==='slow')startEnemyMotion();}
+    boostInventory[id]--;if(boostInventory[id]<=0)delete boostInventory[id];saveSkins();renderBoostSlots();draw();
   }
+  function moveOutOfWall(){
+    if(!player||!map||!['#','B'].includes(map[player.y]?.[player.x]))return false;
+    let best=null;for(let radius=1;radius<Math.max(rows,cols);radius++){const candidates=[];for(let dy=-radius;dy<=radius;dy++){const dx=radius-Math.abs(dy);for(const sx of dx===0?[0]:[-dx,dx]){const x=player.x+sx,y=player.y+dy,cell=map[y]?.[x];if(cell!==undefined&&!['#','B','H'].includes(cell))candidates.push({x,y});}}if(candidates.length){candidates.sort((a,b)=>(Math.abs(a.x-exit.x)+Math.abs(a.y-exit.y))-(Math.abs(b.x-exit.x)+Math.abs(b.y-exit.y)));best=candidates[0];break;}}
+    if(best){player={x:best.x,y:best.y};updateObjective('Le mode Fantôme est terminé : la boule a été replacée dans le passage libre le plus proche, en direction de la sortie.');draw();saveGame();return true;}return false;
+  }
+  let ghostWasActive=false;
+  function updateEffectTimers(){
+    const now=Date.now(),ghostActive=(activeEffects.ghost||0)>now;if(ghostWasActive&&!ghostActive){moveOutOfWall();delete activeEffects.ghost;}ghostWasActive=ghostActive;
+    let slowExpired=false;for(const [id,end] of Object.entries(activeEffects))if(end<=now){if(id==='slow')slowExpired=true;delete activeEffects[id];}
+    if(slowExpired&&running)startEnemyMotion();renderBoostSlots();if(running)updateHUD();
+  }
+  setInterval(updateEffectTimers,250);
   function unlockRandomSkin(){
     if(level5RewardGiven)return null;
     const available=skins.filter(s=>s.id!=='blue'&&!unlocked.includes(s.id));
@@ -212,20 +235,20 @@
   }
   function getRecords(){try{return JSON.parse(localStorage.getItem('bouleBleueRecords'))||[];}catch(_){return [];}}
   function addRecord(seconds,moveCount,bonus){
-    const records=getRecords();records.push({level,seconds,moves:moveCount,bonus,date:new Date().toLocaleDateString('fr-FR')});records.sort((a,b)=>b.level-a.level||a.seconds-b.seconds||a.moves-b.moves);localStorage.setItem('bouleBleueRecords',JSON.stringify(records.slice(0,5)));
+    const records=getRecords();records.push({player:currentPlayer,level,seconds,moves:moveCount,bonus,date:new Date().toLocaleDateString('fr-FR')});records.sort((a,b)=>b.level-a.level||a.seconds-b.seconds||a.moves-b.moves);localStorage.setItem('bouleBleueRecords',JSON.stringify(records.slice(0,5)));
   }
   function renderScores(){
     const records=getRecords(),box=document.querySelector('#scoreList');if(!records.length){box.innerHTML='<p>Aucun record enregistré.</p>';return;}
-    box.innerHTML=`<table class="score-table"><thead><tr><th>#</th><th>Niveau</th><th>Temps</th><th>Mouvements</th><th>Bonus</th></tr></thead><tbody>${records.map((r,i)=>`<tr><td>${i+1}</td><td>${r.level}</td><td>${r.seconds} s</td><td>${r.moves}</td><td>⭐ ${r.bonus||0}</td></tr>`).join('')}</tbody></table>`;
+    box.innerHTML=`<table class="score-table"><thead><tr><th>#</th><th>Profil</th><th>Niveau</th><th>Temps</th><th>Mouvements</th><th>Bonus</th></tr></thead><tbody>${records.map((r,i)=>`<tr><td>${i+1}</td><td>${r.player||'Joueur'}</td><td>${r.level}</td><td>${r.seconds} s</td><td>${r.moves}</td><td>⭐ ${r.bonus||0}</td></tr>`).join('')}</tbody></table>`;
   }
 
   const themes=[
-    {name:'Nuit', floor:'#050914', wall1:'#204d7b', wall2:'#10223f', edge:'#3978ad', block:'🌑', hazard:'🕳️', danger:'#101018'},
+    {name:'Nuit', floor:'#050914', wall1:'#204d7b', wall2:'#10223f', edge:'#3978ad', block:'🔭', hazard:'🕳️', danger:'#101018'},
     {name:'Désert', floor:'#332410', wall1:'#c58b3b', wall2:'#704619', edge:'#e8b75c', block:'🪨', hazard:'🕳️', danger:'#17100a'},
     {name:'Glace', floor:'#d8f4ff', wall1:'#7ed8f2', wall2:'#337fa9', edge:'#e8fbff', block:'🧊', hazard:'💧', danger:'#116fa3'},
     {name:'Forêt', floor:'#102819', wall1:'#347847', wall2:'#174429', edge:'#65a966', block:'🌲', hazard:'💧', danger:'#174f86'},
-    {name:'Jungle', floor:'#102b18', wall1:'#4b7e2b', wall2:'#214d1e', edge:'#8eb957', block:'🌴', hazard:'🟤', danger:'#553417'},
-    {name:'Fantôme', floor:'#120e22', wall1:'#65558b', wall2:'#2c244a', edge:'#aaa0d5', block:'👻', hazard:'🌀', danger:'#321952'},
+    {name:'Jungle', floor:'#102b18', wall1:'#4b7e2b', wall2:'#214d1e', edge:'#8eb957', block:'🌴', hazard:'🕳️', danger:'#553417'},
+    {name:'Fantôme', floor:'#120e22', wall1:'#65558b', wall2:'#2c244a', edge:'#aaa0d5', block:'🕯️', hazard:'⚰️', danger:'#321952'},
     {name:'Volcan', floor:'#210805', wall1:'#7d2514', wall2:'#3a0c08', edge:'#e44a1e', block:'🪨', hazard:'🔥', danger:'#ff4a08'}
   ];
 
@@ -294,7 +317,7 @@
     const patterns={key:[[660,.08],[880,.12]],star:[[880,.07],[1100,.07],[1320,.16]],locked:[[180,.12],[145,.18]],portal:[[330,.08],[495,.08],[740,.16]],skin:[[523,.09],[659,.09],[784,.09],[1047,.22]],life:[[440,.10],[660,.10],[880,.22]],victory:[[523,.10],[659,.10],[784,.10],[1047,.28]],collision:[[180,.12],[120,.28]],hazard:[[260,.10],[190,.12],[110,.3]]};
     let delay=0;for(const [freq,dur] of patterns[name]||[]){tone(freq,dur,name==='portal'?'sine':'square',.14,sfxGain,delay);delay+=dur*.72;}
   }
-  function syncSoundButtons(){document.querySelector('#soundBtn').textContent=`Bruitages : ${soundEnabled?'activés':'coupés'}`;document.querySelector('#soundGameBtn').textContent=soundEnabled?'🔊':'🔇';document.querySelector('#musicBtn').textContent=`Musique : ${musicEnabled?'activée':'coupée'}`;document.querySelector('#musicGameBtn').textContent=musicEnabled?'🎵':'🚫';}
+  function syncSoundButtons(){document.querySelector('#soundBtn').textContent=`${soundEnabled?'🔊':'🔇'} Bruitages : ${soundEnabled?'activés':'coupés'}`;document.querySelector('#soundGameBtn').textContent=soundEnabled?'🔊':'🔇';document.querySelector('#musicBtn').textContent=`${musicEnabled?'🎵':'🚫'} Musique : ${musicEnabled?'activée':'coupée'}`;document.querySelector('#musicGameBtn').textContent=musicEnabled?'🎵':'🚫';}
   function toggleSound(){soundEnabled=!soundEnabled;try{localStorage.setItem('bouleBleueSound',soundEnabled?'on':'off');}catch(_){}syncSoundButtons();}
   function toggleMusic(){musicEnabled=!musicEnabled;try{localStorage.setItem('bouleBleueMusic',musicEnabled?'on':'off');}catch(_){}if(musicEnabled){if(!startScreen.classList.contains('hidden')||!skinScreen.classList.contains('hidden'))startMenuMusic();else if(running&&!paused)startMusic();}else stopMusic();syncSoundButtons();}
 
@@ -309,8 +332,8 @@
     return rounded%2===0?rounded+1:rounded;
   }
   function guardCount(){
-    if(level<10)return 3+Math.floor((level-1)/3);
-    return 6+Math.floor((level-10)/5);
+    if(level<10)return Math.min(15,3+Math.floor((level-1)/3));
+    return Math.min(15,6+Math.floor((level-10)/5));
   }
   function open(x,y){ return y>=0&&y<rows&&x>=0&&x<cols&&map[y][x]!=='#'&&map[y][x]!=='B'; }
   function safePath(){
@@ -348,6 +371,28 @@
     }
     return maze;
   }
+  function generateBonusMaze(){
+    const maze=Array.from({length:rows},(_,y)=>Array.from({length:cols},(_,x)=>(x===0||y===0||x===cols-1||y===rows-1)?'#':' '));
+    for(let y=4;y<rows-3;y+=4){const gap1=2+Math.floor(Math.random()*(cols-5)),gap2=2+Math.floor(Math.random()*(cols-5));for(let x=2;x<cols-2;x++)if(x!==gap1&&x!==gap1+1&&x!==gap2)maze[y][x]='#';}
+    for(let x=6;x<cols-4;x+=8){const start=2+Math.floor(Math.random()*4),end=Math.min(rows-2,start+5+Math.floor(Math.random()*5));for(let y=start;y<end;y++)if(maze[y][x]===' '&&Math.random()>.22)maze[y][x]='#';}
+    maze[1][1]=' ';maze[rows-2][cols-2]=' ';return maze;
+  }
+  function releaseBonusGuardians(){
+    if(bonusGuardiansReleased)return;bonusGuardiansReleased=true;clearInterval(bonusTimer);enemies=[];const spaces=[];
+    for(let y=1;y<rows-1;y++)for(let x=1;x<cols-1;x++)if(map[y][x]===' '&&Math.abs(x-player.x)+Math.abs(y-player.y)>8&&!(x===exit.x&&y===exit.y))spaces.push({x,y});
+    while(enemies.length<6&&spaces.length){const p=spaces.splice(Math.floor(Math.random()*spaces.length),1)[0];enemies.push({...p,dx:0,dy:0,id:`bonus-${enemies.length}`});}
+    findDeadEnds();startEnemyMotion();updateObjective('Les 30 secondes sont écoulées : six gardiens viennent d’apparaître ! Atteins vite la sortie.');sfx('locked');draw();
+  }
+  function startBonusCountdown(){
+    clearInterval(bonusTimer);if(!bonusMode||bonusGuardiansReleased)return;
+    bonusTimer=setInterval(()=>{if(!running||paused)return;bonusRemaining=Math.max(0,bonusRemaining-.25);updateHUD();if(bonusRemaining<=0)releaseBonusGuardians();},250);
+  }
+  function startBonusLevel(afterLevel){
+    stopMoving();stopMusic();clearInterval(enemyTimer);clearInterval(bonusTimer);bonusMode=true;bonusForLevel=afterLevel;level=afterLevel;bonusStarsStart=stars;bonusStarsCollected=0;bonusRemaining=30;bonusGuardiansReleased=false;
+    rows=23;cols=29;canvas.width=cols*TILE;canvas.height=rows*TILE;theme=themes[0];map=generateBonusMaze();player={x:1,y:1};exit={x:cols-2,y:rows-2};enemies=[];keyRequired=false;hasKey=true;portalA=portalB=null;invulnerableZones=[];ballsNeeded=1;ballsExited=0;moves=0;deathReason='Un gardien t’a touché.';
+    starsRemaining=15+Math.floor(Math.random()*11);const wanted=starsRemaining;for(let n=0;n<wanted;n++){const p=randomFreeCell(2);if(p)map[p.y][p.x]='S';else {starsRemaining=n;break;}}levelStarsTotal=starsRemaining;starAvailable=starsRemaining>0;findDeadEnds();targetMovesLow=0;targetMovesHigh=0;targetTimeLow=30;targetTimeHigh=30;
+    running=true;paused=false;lastWin=false;hudNote='Bonus : collecte les étoiles avant l’arrivée des gardiens';startTime=Date.now();overlay.classList.remove('show');updateObjective('BONUS : collecte un maximum d’étoiles et atteins la sortie en 30 secondes. Ensuite, six gardiens apparaîtront.');renderBoostSlots();startBonusCountdown();if(audioCtx&&musicEnabled)startMusic();draw();saveGame();
+  }
   function addDecor(){
     const candidates=[];
     for(let y=2;y<rows-2;y++)for(let x=2;x<cols-2;x++)if(map[y][x]===' '&&Math.abs(x-1)+Math.abs(y-1)>6&&Math.abs(x-exit.x)+Math.abs(y-exit.y)>4)candidates.push({x,y});
@@ -372,15 +417,17 @@
     return cells.length?cells[Math.floor(Math.random()*cells.length)]:null;
   }
   function addSpecials(){
-    keyRequired=level%3===0||Math.random()<.16;hasKey=false;portalA=portalB=null;
-    if(keyRequired){const p=randomFreeCell(8,true);if(p)map[p.y][p.x]='K';else keyRequired=false;}
+    keyRequired=level%3===0||Math.random()<.16;hasKey=false;portalA=portalB=null;invulnerableZones=[];
+    if(keyRequired){let p=randomFreeCell(8,true)||randomFreeCell(2,true);if(p)map[p.y][p.x]='K';else keyRequired=false;}
     starsRemaining=level<4?0:level>50?7+Math.floor(Math.random()*2):level>30?3+Math.floor(Math.random()*3):level>15?2+Math.floor(Math.random()*3):1+Math.floor(Math.random()*2);
     for(let n=0;n<starsRemaining;n++){const p=randomFreeCell(4);if(p)map[p.y][p.x]='S';else {starsRemaining=n;break;}}
+    levelStarsTotal=starsRemaining;
     starAvailable=starsRemaining>0;
     generationCount++;generationsSincePortal++;
     if(level>15&&generationsSincePortal>=nextPortalGap){
       const a=randomFreeCell(5);if(a){map[a.y][a.x]='P';const b=randomFreeCell(12);if(b&&Math.abs(a.x-b.x)+Math.abs(a.y-b.y)>Math.floor((rows+cols)/3)){map[b.y][b.x]='P';portalA=a;portalB=b;generationsSincePortal=0;nextPortalGap=3+Math.floor(Math.random()*2);}else map[a.y][a.x]=' ';}
     }
+    if(level>=30){const count=level>=75?3:level>=50?2:1;for(let n=0;n<count;n++){const p=randomFreeCell(10,true);if(p){map[p.y][p.x]='I';invulnerableZones.push(p);}}}
   }
   function findDeadEnds(){
     const active=new Set();
@@ -399,26 +446,37 @@
     targetMovesLow=Math.round(base*1.32);targetMovesHigh=Math.round(base*2.55);
     targetTimeLow=Math.round(base*.72+enemyCount*2.5);targetTimeHigh=Math.round(targetTimeLow*2.25);
   }
+  function updateHUD(note=null){
+    if(note!==null)hudNote=note;const collected=Math.max(0,levelStarsTotal-starsRemaining),levelLabel=bonusMode?`${bonusForLevel} bis`:level,guardLabel=enemies?.length||0,timeLabel=bonusMode&&!bonusGuardiansReleased?` · ⏱️ ${Math.ceil(bonusRemaining)} s`:'';
+    status.textContent=`${currentPlayer} · Niveau ${levelLabel} · Biome ${theme?.name||'Nuit'} · ${guardLabel} gardien${guardLabel>1?'s':''} · ⭐ Niveau ${collected}/${levelStarsTotal} · Réserve ${stars} · ${lives} vie${lives>1?'s':''}${timeLabel}${hudNote?` · ${hudNote}`:''}`;
+  }
   function updateObjective(note=''){
+    if(note)hudNote=note;
     const goals=[];
     if(keyRequired&&!hasKey)goals.push('récupère la clé 🔑 avant la sortie');
     if(starAvailable)goals.push(`collecte ${starsRemaining} étoile${starsRemaining>1?'s':''} ⭐ pour la boutique`);
     if(portalA)goals.push('les passages 🌀 relient les deux côtés du labyrinthe');
+    if(invulnerableZones.length)goals.push('les refuges 🛡️ rendent la boule invulnérable');
     if(ballsNeeded===2)goals.push(`fais sortir ${2-ballsExited} boule${2-ballsExited>1?'s':''}`);
-    const estimate=`Repères : ${targetMovesLow}–${targetMovesHigh} déplacements · ${targetTimeLow}–${targetTimeHigh} s.`;
-    subtitle.textContent=(note?`${note} `:`${goals.length?'Objectifs : '+goals.join(' · '):`Traverse le biome ${theme.name}.`} Évite les gardiens et les dangers. `)+estimate;
+    const estimate=bonusMode?'Défi bonus : sortie avant la fin du décompte de 30 secondes.':`Repères : ${targetMovesLow}–${targetMovesHigh} déplacements · ${targetTimeLow}–${targetTimeHigh} s.`;
+    const context=`Biome : ${theme.name} · Gardiens : ${enemies?.length||0} · Étoiles du niveau : ${Math.max(0,levelStarsTotal-starsRemaining)}/${levelStarsTotal} · Vies : ${lives}. `;
+    subtitle.textContent=context+(note?`${note} `:`${goals.length?'Objectifs : '+goals.join(' · '):`Traverse le biome ${theme.name}.`} Évite les gardiens et les dangers. `)+estimate;updateHUD();
   }
+  function gameSnapshot(){return {playerName:currentPlayer,savedAt:Date.now(),level,lives,stars,totalWins,unlocked,guardianUnlocked,selectedSkin,selectedGuardianSkin,level5RewardGiven,rows,cols,map,player,exit,enemies,keyRequired,hasKey,starAvailable,starsRemaining,levelStarsTotal,portalA,portalB,invulnerableZones,ballsNeeded,ballsExited,moves,elapsed:Math.max(0,Math.round((Date.now()-startTime)/1000)),targetMovesLow,targetMovesHigh,targetTimeLow,targetTimeHigh,boostInventory,activeEffects,bonusMode,bonusForLevel,bonusStarsStart,bonusStarsCollected,bonusRemaining,bonusGuardiansReleased};}
+  function savedProfiles(kind){try{return JSON.parse(localStorage.getItem(kind))||{};}catch(_){return {};}}
   function saveGame(){
-    if(!map||!player)return;try{localStorage.setItem('bouleBleueSave',JSON.stringify({level,lives,stars,totalWins,rows,cols,map,player,exit,enemies,keyRequired,hasKey,starAvailable,starsRemaining,portalA,portalB,ballsNeeded,ballsExited,moves,elapsed:Math.round((Date.now()-startTime)/1000),targetMovesLow,targetMovesHigh,targetTimeLow,targetTimeHigh,boostInventory,activeEffects}));saveSkins();}catch(_){}
+    if(!map||!player)return;try{const saves=savedProfiles('bouleBleueAutoSaves');saves[currentPlayer]=gameSnapshot();localStorage.setItem('bouleBleueAutoSaves',JSON.stringify(saves));localStorage.setItem('bouleBleueSave',JSON.stringify(saves[currentPlayer]));saveSkins();}catch(_){}
   }
-  function restoreGame(){
-    let s;try{s=JSON.parse(localStorage.getItem('bouleBleueSave'));}catch(_){return false;}if(!s?.map)return false;
-    Object.assign(window.__unused||{},{});level=s.level;lives=s.lives;stars=s.stars;totalWins=s.totalWins||0;rows=s.rows;cols=s.cols;map=s.map;player=s.player;exit=s.exit;enemies=s.enemies||[];keyRequired=s.keyRequired;hasKey=s.hasKey;starAvailable=s.starAvailable;starsRemaining=s.starsRemaining||0;portalA=s.portalA;portalB=s.portalB;ballsNeeded=s.ballsNeeded||1;ballsExited=s.ballsExited||0;moves=s.moves||0;targetMovesLow=s.targetMovesLow;targetMovesHigh=s.targetMovesHigh;targetTimeLow=s.targetTimeLow;targetTimeHigh=s.targetTimeHigh;boostInventory=s.boostInventory||boostInventory;activeEffects=s.activeEffects||{};
-    theme=themes[Math.floor((level-1)/3)%themes.length];canvas.width=cols*TILE;canvas.height=rows*TILE;startTime=Date.now()-(s.elapsed||0)*1000;running=false;paused=true;lastWin=false;overlay.classList.remove('show');findDeadEnds();renderBoostSlots();status.textContent=`Niveau ${level} sauvegardé · ${lives} vie${lives>1?'s':''} · ⭐ ${stars}`;updateObjective('Partie sauvegardée prête à reprendre.');draw();return true;
+  function manualSave(){if(!map||!player)return;const saves=savedProfiles('bouleBleueManualSaves');saves[currentPlayer]=gameSnapshot();localStorage.setItem('bouleBleueManualSaves',JSON.stringify(saves));saveGame();alert(`Partie de ${currentPlayer} sauvegardée au niveau ${bonusMode?bonusForLevel+' bis':level}.`);}
+  function bestProfileSave(name){const a=savedProfiles('bouleBleueAutoSaves')[name],m=savedProfiles('bouleBleueManualSaves')[name];if(!a)return m;if(!m)return a;const progress=s=>(s.level||0)+(s.bonusMode?0.5:0);return progress(a)>progress(m)||progress(a)===progress(m)&&(a.savedAt||0)>(m.savedAt||0)?a:m;}
+  function restoreGame(snapshot=null){
+    let s=snapshot||bestProfileSave(currentPlayer);if(!s){try{s=JSON.parse(localStorage.getItem('bouleBleueSave'));}catch(_){return false;}}if(!s?.map)return false;
+    currentPlayer=s.playerName||currentPlayer;level=s.level;lives=s.lives;stars=s.stars;totalWins=s.totalWins||0;unlocked=s.unlocked||unlocked;guardianUnlocked=s.guardianUnlocked||guardianUnlocked;selectedSkin=s.selectedSkin||selectedSkin;selectedGuardianSkin=s.selectedGuardianSkin||selectedGuardianSkin;level5RewardGiven=!!s.level5RewardGiven;rows=s.rows;cols=s.cols;map=s.map;player=s.player;exit=s.exit;enemies=(s.enemies||[]).map((e,i)=>({x:Number(e.x),y:Number(e.y),dx:Number(e.dx)||0,dy:Number(e.dy)||0,id:e.id||`g${i}`}));keyRequired=!!s.keyRequired;hasKey=!!s.hasKey;starAvailable=s.starAvailable;starsRemaining=s.starsRemaining||0;levelStarsTotal=s.levelStarsTotal??(s.starsRemaining||0);portalA=s.portalA;portalB=s.portalB;invulnerableZones=s.invulnerableZones||[];ballsNeeded=s.ballsNeeded||1;ballsExited=s.ballsExited||0;moves=s.moves||0;targetMovesLow=s.targetMovesLow;targetMovesHigh=s.targetMovesHigh;targetTimeLow=s.targetTimeLow;targetTimeHigh=s.targetTimeHigh;boostInventory=s.boostInventory||{};if(Array.isArray(boostInventory)){const old=boostInventory;boostInventory={};old.forEach(id=>boostInventory[id]=(boostInventory[id]||0)+1);}activeEffects=s.activeEffects||{};ghostWasActive=effectActive('ghost');bonusMode=!!s.bonusMode;bonusForLevel=s.bonusForLevel||0;bonusStarsStart=s.bonusStarsStart||stars;bonusStarsCollected=s.bonusStarsCollected||0;bonusRemaining=s.bonusRemaining??30;bonusGuardiansReleased=!!s.bonusGuardiansReleased;
+    if(keyRequired&&!hasKey&&!map.some(row=>row.includes('K'))){const p=randomFreeCell(2,true);if(p)map[p.y][p.x]='K';else keyRequired=false;}theme=themes[Math.floor((level-1)/3)%themes.length];canvas.width=cols*TILE;canvas.height=rows*TILE;startTime=Date.now()-(s.elapsed||0)*1000;running=false;paused=true;lastWin=false;overlay.classList.remove('show');findDeadEnds();renderBoostSlots();status.textContent=`${currentPlayer} · Niveau ${bonusMode?bonusForLevel+' bis':level} sauvegardé · ${lives} vie${lives>1?'s':''} · ⭐ ${stars}`;if(bonusMode)subtitle.textContent=`BONUS : ${Math.ceil(bonusRemaining)} secondes restantes. Collecte les étoiles et atteins la sortie.`;else updateObjective('Partie sauvegardée prête à reprendre.');draw();saveSkins();return true;
   }
   function reset(){
     stopMoving();
-    clearInterval(enemyTimer);
+    clearInterval(enemyTimer);clearInterval(bonusTimer);bonusMode=false;bonusGuardiansReleased=false;hudNote='Début du niveau';
     rows=oddSize(15,level); cols=oddSize(19,level);
     canvas.width=cols*TILE; canvas.height=rows*TILE;
     theme=themes[Math.floor((level-1)/3)%themes.length];
@@ -429,27 +487,27 @@
     enemies=[];
     const enemyCount=guardCount();
     calculateTargets(enemyCount);
-    while(enemies.length<enemyCount&&spaces.length){ const i=Math.floor(Math.random()*spaces.length); const p=spaces.splice(i,1)[0]; if(enemies.every(e=>Math.abs(e.x-p.x)+Math.abs(e.y-p.y)>5)) enemies.push({...p,dx:0,dy:0}); }
+    while(enemies.length<enemyCount&&spaces.length){ const i=Math.floor(Math.random()*spaces.length); const p=spaces.splice(i,1)[0]; if(enemies.every(e=>Math.abs(e.x-p.x)+Math.abs(e.y-p.y)>5)) enemies.push({...p,dx:0,dy:0,id:`g-${level}-${enemies.length}`}); }
     ballsNeeded=level>=10?2:1; ballsExited=0; deathReason='Une boule rouge t’a touché.';
     running=true; paused=false; lastWin=false; moves=0; startTime=Date.now(); overlay.classList.remove('show');
-    status.textContent=`Niveau ${level} · ${theme.name} · ${enemyCount} gardiens · ${lives} vie${lives>1?'s':''} · ⭐ ${stars}${ballsNeeded===2?' · 2 boules':''}`;
+    status.textContent=`${currentPlayer} · Niveau ${level} · ${theme.name} · ${enemyCount} gardiens · ${lives} vie${lives>1?'s':''} · ⭐ ${stars}${ballsNeeded===2?' · 2 boules':''}`;
     updateObjective();
     renderBoostSlots();startEnemyMotion();if(audioCtx&&musicEnabled)startMusic();draw();saveGame();
   }
-  function startEnemyMotion(){clearInterval(enemyTimer);const baseDelay=720-Math.min(level-1,9)*8-Math.max(0,level-10)*2;enemyTimer=setInterval(moveEnemies,Math.max(460,baseDelay)*(effectActive('slow')?2:1));}
+  function startEnemyMotion(){clearInterval(enemyTimer);const baseDelay=740-Math.min(level-1,9)*7-Math.max(0,level-75)*2;enemyTimer=setInterval(moveEnemies,Math.max(600,baseDelay)*(effectActive('slow')?2:1));}
   function showMenu(){
-    saveGame();stopMoving();stopMusic();clearInterval(enemyTimer); running=false; paused=true; gameUI.classList.add('hidden'); startScreen.classList.remove('hidden');
+    saveGame();stopMoving();stopMusic();clearInterval(enemyTimer);clearInterval(bonusTimer); running=false; paused=true; gameUI.classList.add('hidden'); startScreen.classList.remove('hidden');
     document.querySelector('#playBtn').textContent='Reprendre';
     if(audioCtx&&musicEnabled)startMenuMusic();
   }
   function playGame(){
     startScreen.classList.add('hidden'); skinScreen.classList.add('hidden'); gameUI.classList.remove('hidden');
-    if(paused&&!overlay.classList.contains('show')){running=true;paused=false;startEnemyMotion();startMusic();draw();}
+    if(paused&&!overlay.classList.contains('show')){running=true;paused=false;if(bonusMode){if(bonusGuardiansReleased)startEnemyMotion();else startBonusCountdown();}else startEnemyMotion();startMusic();draw();}
   }
   function openSkins(){renderSkins();renderGuardianSkins();renderBoostShop();startScreen.classList.add('hidden');gameUI.classList.add('hidden');skinScreen.classList.remove('hidden');}
   function validDirs(e){
     let dirs=[[0,-1],[0,1],[-1,0],[1,0]].filter(([dx,dy])=>open(e.x+dx,e.y+dy)&&!(e.x+dx===exit.x&&e.y+dy===exit.y)&&map[e.y+dy][e.x+dx]!=='P'&&!(ballsNeeded===2&&ballsExited===0&&e.x+dx===1&&e.y+dy===1));
-    if(deadEndCells.has(key(player.x,player.y))){const safer=dirs.filter(([dx,dy])=>!deadEndCells.has(key(e.x+dx,e.y+dy)));if(safer.length)dirs=safer;else return [];}
+    if(deadEndCells.has(key(player.x,player.y))){const current=Math.abs(e.x-player.x)+Math.abs(e.y-player.y),safer=dirs.filter(([dx,dy])=>!deadEndCells.has(key(e.x+dx,e.y+dy))||Math.abs(e.x+dx-player.x)+Math.abs(e.y+dy-player.y)>=current);if(safer.length)dirs=safer;}
     return dirs;
   }
   function approachSide(x,y){const dx=x-player.x,dy=y-player.y;if(Math.abs(dx)>=Math.abs(dy))return dx<0?'L':'R';return dy<0?'U':'D';}
@@ -463,12 +521,12 @@
     enemies.forEach(e=>{if((distances.get(key(e.x,e.y))??99)<=7)sideCounts[approachSide(e.x,e.y)]++;});
     enemies.forEach(e=>{
       const oldDistance=distances.get(key(e.x,e.y))??99,oldSide=approachSide(e.x,e.y);if(oldDistance<=7)sideCounts[oldSide]=Math.max(0,sideCounts[oldSide]-1);
-      const progress=Math.min(1,(level-1)/99),allDirs=validDirs(e),reverseChance=.02+progress*.28;
+      const progress=Math.min(1,(level-1)/99),lateProgress=Math.max(0,(level-75)/25),allDirs=validDirs(e),reverseChance=.02+progress*.18;
       let dirs=Math.random()<reverseChance?allDirs:allDirs.filter(([dx,dy])=>!(dx===-e.dx&&dy===-e.dy));
       if(!dirs.length)dirs=allDirs;
       const antiSandwich=dirs.filter(([dx,dy])=>{const nx=e.x+dx,ny=e.y+dy,d=distances.get(key(nx,ny))??99;if(d>7)return true;const side=approachSide(nx,ny);return sideCounts[opposite[side]]===0;});
-      const sandwichProtection=.98-progress*.78;if(antiSandwich.length&&Math.random()<sandwichProtection)dirs=antiSandwich;
-      const direct=straightPursuit(e),pursuitChance=.04+progress*.76;let chosen=null;
+      const sandwichProtection=.99-progress*.34;if(antiSandwich.length&&Math.random()<sandwichProtection)dirs=antiSandwich;
+      const direct=straightPursuit(e),pursuitChance=.04+progress*.34+lateProgress*.18;let chosen=null;
       if(direct&&Math.random()<pursuitChance&&dirs.some(([dx,dy])=>dx===direct[0]&&dy===direct[1]))chosen=direct;
       const randomTurnChance=.02+progress*.28;if(!chosen&&Math.random()<randomTurnChance){const turns=dirs.filter(([dx,dy])=>!(dx===e.dx&&dy===e.dy));if(turns.length)dirs=turns;}
       const chase=Math.random()<(.24+progress*.54);
@@ -480,40 +538,52 @@
       occupied.add(key(e.x,e.y));
       const newDistance=distances.get(key(e.x,e.y))??99;if(newDistance<=7)sideCounts[approachSide(e.x,e.y)]++;
     });
-    check(); draw();
+    check();draw();if(running&&Date.now()-lastEnemySave>1500){lastEnemySave=Date.now();saveGame();}
   }
   function movePlayer(dx,dy){
     if(!running)return; const nx=player.x+dx, ny=player.y+dy;
     const inside=nx>=0&&nx<cols&&ny>=0&&ny<rows;
     if(inside&&(open(nx,ny)||effectActive('ghost'))){player.x=nx;player.y=ny;moves++;check();draw();if(running)saveGame();}
   }
+  function playerIsProtected(){return (player.x===1&&player.y===1)||(player.x===exit.x&&player.y===exit.y)||map[player.y]?.[player.x]==='I';}
   function check(){
     let cell=map[player.y][player.x];
     if(cell==='K'){hasKey=true;map[player.y][player.x]=' ';sfx('key');updateObjective('Clé récupérée 🔑 : la sortie est maintenant ouverte. Trouve aussi les autres bonus !');cell=' ';}
-    if(cell==='S'){stars++;starsRemaining=Math.max(0,starsRemaining-1);starAvailable=starsRemaining>0;map[player.y][player.x]=' ';saveSkins();sfx('star');status.textContent=`Niveau ${level} · Étoile collectée · ⭐ ${stars}`;updateObjective(`Étoile collectée ⭐ ! ${starsRemaining?`${starsRemaining} reste${starsRemaining>1?'nt':''} dans ce niveau.`:'Toutes les étoiles du niveau sont récupérées.'}`);cell=' ';}
+    if(cell==='S'){stars++;if(bonusMode)bonusStarsCollected++;starsRemaining=Math.max(0,starsRemaining-1);starAvailable=starsRemaining>0;map[player.y][player.x]=' ';saveSkins();sfx('star');updateObjective(`Étoile collectée ⭐ ! ${starsRemaining?`${starsRemaining} reste${starsRemaining>1?'nt':''} dans ce niveau.`:'Toutes les étoiles du niveau sont récupérées.'}`);cell=' ';}
     if(cell==='P'&&portalA&&portalB){const target=player.x===portalA.x&&player.y===portalA.y?portalB:portalA;player={x:target.x,y:target.y};sfx('portal');updateObjective('Passage secret utilisé 🌀 : tu as traversé le labyrinthe instantanément.');cell=map[player.y][player.x];}
+    if(cell==='I')updateObjective('Refuge 🛡️ : tu es invulnérable tant que tu restes sur cette case.');
     if(cell==='H'&&!effectActive('invincible')){deathReason=`Le danger du biome ${theme.name} a englouti la boule bleue.`;finish(false);}
     else if(enemies.some(e=>e.x===player.x&&e.y===player.y)){
       if(effectActive('invincible')){enemies=enemies.filter(e=>!(e.x===player.x&&e.y===player.y));sfx('collision');updateObjective('Gardien détruit grâce à l’invincibilité 🛡️ !');}
-      else if(!effectActive('invisible')&&!deadEndCells.has(key(player.x,player.y))){deathReason='Un gardien t’a touché.';finish(false);}
+      else if(!effectActive('invisible')&&!playerIsProtected()&&!deadEndCells.has(key(player.x,player.y))){deathReason='Un gardien t’a touché.';finish(false);}
     }
     else if(player.x===exit.x&&player.y===exit.y){
       if(keyRequired&&!hasKey){sfx('locked');updateObjective('Sortie verrouillée 🔒 : retrouve d’abord la clé 🔑 dans le labyrinthe.');draw();return;}
       ballsExited++;
-      if(ballsExited<ballsNeeded){player={x:1,y:1};status.textContent=`Niveau ${level} · Première boule sortie · À la seconde !`;updateObjective();draw();}
+      if(ballsExited<ballsNeeded){player={x:1,y:1};updateObjective('Première boule sortie : ramène maintenant la seconde boule du départ jusqu’à la sortie.');draw();}
       else finish(true);
     }
   }
   function finish(win){
-    if(!running)return; stopMoving();stopMusic();running=false; lastWin=win; clearInterval(enemyTimer);
+    if(!running)return; stopMoving();stopMusic();running=false; lastWin=win; clearInterval(enemyTimer);clearInterval(bonusTimer);
+    document.querySelector('#endShopBtn').classList.add('hidden');document.querySelector('#endLoadBtn').classList.add('hidden');document.querySelector('#playAgain').classList.remove('hidden');
     const seconds=Math.round((Date.now()-startTime)/1000);
+    if(bonusMode){
+      if(!win){stars=bonusStarsStart;bonusStarsCollected=0;saveSkins();sfx('collision');}else{sfx('victory');saveSkins();}
+      document.querySelector('#result').textContent=win?'Bonus réussi !':'Bonus perdu';
+      document.querySelector('#result').style.color=win?'var(--green)':'var(--red)';
+      document.querySelector('#message').textContent=win?`Bravo ${currentPlayer} ! Niveau ${bonusForLevel} bis terminé en ${moves} déplacements et ${seconds} secondes. Tu conserves les ${bonusStarsCollected} étoile${bonusStarsCollected>1?'s':''} collectée${bonusStarsCollected>1?'s':''}.`:`${currentPlayer}, ${deathReason} Aucune vie n’est perdue, mais les étoiles collectées pendant ce bonus sont annulées.`;
+      document.querySelector('#playAgain').textContent='Continuer au niveau suivant';
+      status.textContent=win?`Bonus ${bonusForLevel} bis réussi · ⭐ ${stars}`:`Bonus ${bonusForLevel} bis perdu · aucune vie perdue`;
+      localStorage.removeItem('bouleBleuePendingBonus');localStorage.setItem('bouleBleuePendingLevel',String(bonusForLevel+1));localStorage.removeItem('bouleBleueSave');overlay.classList.add('show');return;
+    }
     const fastMoves=win&&moves<targetMovesLow,fastTime=win&&seconds<targetTimeLow,performanceBonus=(fastMoves?1:0)+(fastTime?1:0);
     if(performanceBonus)stars+=performanceBonus;
     const lifeEarned=win&&level%3===0;
     if(lifeEarned)lives++;
     const skinWon=win&&level===5?unlockRandomSkin():null;
     let guardianSkinWon=null;
-    if(win){totalWins++;addRecord(seconds,moves,performanceBonus);localStorage.setItem('bouleBleuePendingLevel',String(level>=100?1:level+1));if(totalWins%5===0)guardianSkinWon=unlockRandomGuardianSkin();else saveSkins();}
+    if(win){totalWins++;addRecord(seconds,moves,performanceBonus);if(level%10===0&&level<100){localStorage.setItem('bouleBleuePendingBonus',String(level));localStorage.removeItem('bouleBleuePendingLevel');}else localStorage.setItem('bouleBleuePendingLevel',String(level>=100?1:level+1));if(totalWins%5===0)guardianSkinWon=unlockRandomGuardianSkin();else saveSkins();}
     if(win){sfx('victory');if(lifeEarned)setTimeout(()=>sfx('life'),420);if(skinWon||guardianSkinWon)setTimeout(()=>sfx('skin'),760);}
     else sfx(deathReason.includes('danger')?'hazard':'collision');
     document.querySelector('#result').textContent=win?'Victoire !':'Perdu !';
@@ -527,9 +597,10 @@
     const slowMessages=moves>targetMovesHigh&&seconds>targetTimeHigh?[' Tu t’es perdu en route ?',' Belle visite guidée du labyrinthe !',' Les murs avaient donc tant de choses à raconter ?']:moves>targetMovesHigh?[' Tu as pris le chemin panoramique !',' Quelques détours de plus et tu connaissais chaque mur.']:seconds>targetTimeHigh?[' Tu as un peu traîné en route…',' Petite pause goûter dans le labyrinthe ?']:[];
     const humor=win&&slowMessages.length?slowMessages[Math.floor(Math.random()*slowMessages.length)]:'';
     const finalMessage=win&&level>=100?' Niveau 100 terminé : tu as remporté La Boule Bleue !':'';
-    document.querySelector('#message').textContent=win?`Niveau ${level} terminé en ${moves} déplacements et ${seconds} secondes.${performanceMessage}${humor}${lifeMessage}${skinMessage}${guardianSkinMessage}${nextGuard}${nextTheme}${finalMessage}`:lives>0?`${deathReason} Utilise une vie pour recommencer ce niveau.`:`${deathReason} Tu n’as plus de vie : la partie recommencera au niveau 1.`;
-    document.querySelector('#playAgain').textContent=win?(level>=100?'Recommencer l’aventure':'Niveau suivant'):lives>0?'Utiliser une vie':'Nouvelle partie';
-    status.textContent=win?`Niveau ${level} réussi · ${lives} vie${lives>1?'s':''}`:`Niveau ${level} perdu · ${lives} vie${lives>1?'s':''}`; overlay.classList.add('show');
+    document.querySelector('#message').textContent=win?`Bravo ${currentPlayer} ! Niveau ${level} terminé en ${moves} déplacements et ${seconds} secondes.${performanceMessage}${humor}${lifeMessage}${skinMessage}${guardianSkinMessage}${nextGuard}${nextTheme}${finalMessage}`:lives>0?`${currentPlayer}, ${deathReason} Utilise une vie pour recommencer ce niveau.`:stars>=3?`${currentPlayer}, ${deathReason} Tu n’as plus de vie, mais tu peux en acheter dans la boutique et continuer.`:`${currentPlayer}, ${deathReason} Tu n’as plus de vie ni assez d’étoiles. Reprends ta dernière sauvegarde.`;
+    document.querySelector('#playAgain').textContent=win?(level>=100?'Recommencer l’aventure':level%10===0?'Niveau bonus':'Niveau suivant'):lives>0?'Utiliser une vie':'Nouvelle partie';
+    if(!win&&lives===0){document.querySelector('#playAgain').classList.add('hidden');if(stars>=3)document.querySelector('#endShopBtn').classList.remove('hidden');else document.querySelector('#endLoadBtn').classList.remove('hidden');}
+    status.textContent=win?`${currentPlayer} · Niveau ${level} réussi · ${lives} vie${lives>1?'s':''}`:`${currentPlayer} · Niveau ${level} perdu · ${lives} vie${lives>1?'s':''}`; overlay.classList.add('show');
   }
   function circle(x,y,r,color){ctx.beginPath();ctx.arc(x*TILE+TILE/2,y*TILE+TILE/2,r,0,Math.PI*2);ctx.fillStyle=color;ctx.fill();}
   function drawSkin(x,y,alpha=1){
@@ -552,9 +623,10 @@
     }else if(map[y][x]==='B'){
       ctx.fillStyle=theme.wall2;ctx.fillRect(x*TILE+2,y*TILE+2,TILE-4,TILE-4);ctx.fillText(theme.block,x*TILE+TILE/2,y*TILE+TILE/2);
     }else if(map[y][x]==='H'){
-      ctx.fillStyle=theme.danger;ctx.beginPath();ctx.arc(x*TILE+TILE/2,y*TILE+TILE/2,TILE*.41,0,Math.PI*2);ctx.fill();ctx.fillText(theme.hazard,x*TILE+TILE/2,y*TILE+TILE/2);
+      ctx.fillStyle=theme.danger;ctx.beginPath();ctx.moveTo(x*TILE+TILE/2,y*TILE+2);ctx.lineTo(x*TILE+TILE-2,y*TILE+TILE/2);ctx.lineTo(x*TILE+TILE/2,y*TILE+TILE-2);ctx.lineTo(x*TILE+2,y*TILE+TILE/2);ctx.closePath();ctx.fill();ctx.fillText(theme.hazard,x*TILE+TILE/2,y*TILE+TILE/2);
     }else if(map[y][x]==='K')ctx.fillText('🔑',x*TILE+TILE/2,y*TILE+TILE/2);
     else if(map[y][x]==='S')ctx.fillText('⭐',x*TILE+TILE/2,y*TILE+TILE/2);
+    else if(map[y][x]==='I'){ctx.fillStyle='#173b61';ctx.fillRect(x*TILE+3,y*TILE+3,TILE-6,TILE-6);ctx.fillText('🛡️',x*TILE+TILE/2,y*TILE+TILE/2);}
     else if(map[y][x]==='P'){
       ctx.shadowColor='#b267ff';ctx.shadowBlur=14;ctx.fillStyle='#7b35c9';ctx.beginPath();ctx.arc(x*TILE+TILE/2,y*TILE+TILE/2,TILE*.38,0,Math.PI*2);ctx.fill();ctx.shadowBlur=0;ctx.fillText('🌀',x*TILE+TILE/2,y*TILE+TILE/2);
     }
@@ -595,14 +667,23 @@
   };
   canvas.addEventListener('pointerup',endSwipe);canvas.addEventListener('pointercancel',()=>{swipeMoving=false;stopMoving();});
   canvas.addEventListener('contextmenu',e=>e.preventDefault());
+  function profileNames(){return [...new Set([...Object.keys(savedProfiles('bouleBleueAutoSaves')),...Object.keys(savedProfiles('bouleBleueManualSaves'))])].slice(0,5);}
+  function renderProfileList(){const select=document.querySelector('#profileSelect'),names=profileNames();select.innerHTML='';if(!names.length){const o=document.createElement('option');o.textContent='Aucune partie sauvegardée';o.value='';select.appendChild(o);return;}names.forEach(name=>{const s=bestProfileSave(name),o=document.createElement('option');o.value=name;o.textContent=`${name} — niveau ${s.bonusMode?s.bonusForLevel+' bis':s.level}`;select.appendChild(o);});}
+  function openLoadScreen(){renderProfileList();startScreen.classList.add('hidden');gameUI.classList.add('hidden');loadScreen.classList.remove('hidden');}
+  function requestNewPlayer(){let name=prompt('Nom du joueur / profil :',currentPlayer==='Joueur'?'':currentPlayer);if(name===null)return;name=name.trim().replace(/[<>]/g,'').slice(0,24);if(!name){alert('Indiquez un nom de joueur.');return;}const names=profileNames();if(!names.includes(name)&&names.length>=5){alert('Cinq profils sont déjà enregistrés. Chargez l’un d’eux pour continuer.');return;}currentPlayer=name;level=1;lives=0;stars=0;totalWins=0;boostInventory={};activeEffects={};unlocked=['blue'];guardianUnlocked=['redOrb'];selectedSkin='blue';selectedGuardianSkin='redOrb';level5RewardGiven=false;startScreen.classList.add('hidden');gameUI.classList.remove('hidden');requestLandscape();reset();}
+  async function requestLandscape(){try{if(screen.orientation?.lock)await screen.orientation.lock('landscape');}catch(_){} }
   document.querySelector('#restart').onclick=reset;
   document.querySelector('#menuBtn').onclick=showMenu;
   document.querySelector('#soundBtn').onclick=toggleSound;
   document.querySelector('#soundGameBtn').onclick=toggleSound;
   document.querySelector('#musicBtn').onclick=toggleMusic;
   document.querySelector('#musicGameBtn').onclick=toggleMusic;
-  document.querySelector('#playBtn').onclick=playGame;
-  document.querySelector('#newGameBtn').onclick=()=>{if(!confirm('Commencer une nouvelle aventure au niveau 1 ? Les skins, étoiles et boosts achetés seront conservés.'))return;localStorage.removeItem('bouleBleueSave');level=1;lives=0;activeEffects={};startScreen.classList.add('hidden');gameUI.classList.remove('hidden');reset();};
+  document.querySelector('#playBtn').onclick=()=>{requestLandscape();playGame();};
+  document.querySelector('#newGameBtn').onclick=requestNewPlayer;
+  document.querySelector('#saveBtn').onclick=manualSave;
+  document.querySelector('#loadBtn').onclick=openLoadScreen;
+  document.querySelector('#loadBackBtn').onclick=()=>{loadScreen.classList.add('hidden');startScreen.classList.remove('hidden');};
+  document.querySelector('#loadProfileBtn').onclick=()=>{const name=document.querySelector('#profileSelect').value,s=name&&bestProfileSave(name);if(!s)return;currentPlayer=name;if(restoreGame(s)){loadScreen.classList.add('hidden');requestLandscape();playGame();}};
   document.querySelector('#skinBtn').onclick=openSkins;
   document.querySelector('#scoreBtn').onclick=()=>{renderScores();startScreen.classList.add('hidden');scoreScreen.classList.remove('hidden');};
   document.querySelector('#scoreBackBtn').onclick=()=>{scoreScreen.classList.add('hidden');startScreen.classList.remove('hidden');};
@@ -610,8 +691,12 @@
   document.querySelector('#installBtn').onclick=async()=>{if(!installPrompt)return;installPrompt.prompt();await installPrompt.userChoice;installPrompt=null;document.querySelector('#installBtn').classList.add('hidden');};
   document.querySelector('#skinBackBtn').onclick=()=>{skinScreen.classList.add('hidden');startScreen.classList.remove('hidden');};
   document.querySelector('#skinPlayBtn').onclick=()=>{skinScreen.classList.add('hidden');gameUI.classList.remove('hidden');reset();};
+  document.querySelector('#endShopBtn').onclick=()=>{overlay.classList.remove('show');openSkins();};
+  document.querySelector('#endLoadBtn').onclick=()=>{const s=bestProfileSave(currentPlayer);if(s){overlay.classList.remove('show');restoreGame(s);playGame();}else{overlay.classList.remove('show');showMenu();}};
   document.querySelector('#playAgain').onclick=()=>{
-    localStorage.removeItem('bouleBleuePendingLevel');
+    localStorage.removeItem('bouleBleuePendingLevel');localStorage.removeItem('bouleBleuePendingBonus');
+    if(bonusMode){const next=bonusForLevel+1;bonusMode=false;level=next;reset();return;}
+    if(lastWin&&level%10===0&&level<100){startBonusLevel(level);return;}
     if(lastWin)level=level>=100?1:level+1;
     else if(lives>0)lives--;
     else {level=1;lives=0;}
@@ -619,7 +704,7 @@
   };
   window.addEventListener('beforeunload',saveGame);
   startScreen.addEventListener('pointerdown',()=>{if(musicEnabled&&(!audioCtx||audioCtx.state==='suspended'))startMenuMusic();},{once:true});
-  saveSkins();syncSoundButtons();renderSkins();renderGuardianSkins();renderBoostShop();renderBoostSlots();const pendingLevel=Number(localStorage.getItem('bouleBleuePendingLevel')||0);if(pendingLevel){level=pendingLevel;localStorage.removeItem('bouleBleuePendingLevel');localStorage.removeItem('bouleBleueSave');reset();}const restored=pendingLevel?false:restoreGame();if(!pendingLevel&&!restored)reset();showMenu();document.querySelector('#playBtn').textContent=restored?`Reprendre niveau ${level}`:'Jouer';
+  saveSkins();syncSoundButtons();renderSkins();renderGuardianSkins();renderBoostShop();renderBoostSlots();let restored=false;const pendingBonus=Number(localStorage.getItem('bouleBleuePendingBonus')||0),pendingLevel=Number(localStorage.getItem('bouleBleuePendingLevel')||0);if(LEVEL_100_TEST_MODE){localStorage.removeItem('bouleBleuePendingBonus');localStorage.removeItem('bouleBleuePendingLevel');localStorage.removeItem('bouleBleueSave');level=100;reset();}else if(BONUS_TEST_MODE){localStorage.removeItem('bouleBleuePendingBonus');localStorage.removeItem('bouleBleuePendingLevel');localStorage.removeItem('bouleBleueSave');startBonusLevel(10);}else if(pendingBonus){localStorage.removeItem('bouleBleuePendingBonus');localStorage.removeItem('bouleBleueSave');startBonusLevel(pendingBonus);}else if(pendingLevel){level=pendingLevel;localStorage.removeItem('bouleBleuePendingLevel');localStorage.removeItem('bouleBleueSave');reset();}else restored=restoreGame();if(!LEVEL_100_TEST_MODE&&!BONUS_TEST_MODE&&!pendingBonus&&!pendingLevel&&!restored)reset();showMenu();document.querySelector('#playBtn').textContent=`Reprendre${restored?' · '+currentPlayer+' · niveau '+(bonusMode?bonusForLevel+' bis':level):''}`;
   if('serviceWorker'in navigator&&location.protocol!=='file:')navigator.serviceWorker.register('./service-worker.js').catch(()=>{});
 })();
 </script>
