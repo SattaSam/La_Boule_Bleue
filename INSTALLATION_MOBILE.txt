@@ -1,4 +1,4 @@
-LA BOULE BLEUE — INSTALLATION MOBILE — VERSION 13 FINALE
+LA BOULE BLEUE — INSTALLATION MOBILE — VERSION 14
 
 Cette version est une application web installable (PWA).
 Cette édition réinitialise une fois les anciens profils, inventaires et scores afin de repartir de zéro.
